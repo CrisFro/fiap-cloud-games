@@ -1,0 +1,11 @@
+D:\Proj\Fcg.Api\Fcg.Application\bin\Debug\net8.0\Fcg.Application.deps.json
+D:\Proj\Fcg.Api\Fcg.Application\bin\Debug\net8.0\Fcg.Application.dll
+D:\Proj\Fcg.Api\Fcg.Application\bin\Debug\net8.0\Fcg.Application.pdb
+D:\Proj\Fcg.Api\Fcg.Application\obj\Debug\net8.0\Fcg.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\Proj\Fcg.Api\Fcg.Application\obj\Debug\net8.0\Fcg.Application.AssemblyInfoInputs.cache
+D:\Proj\Fcg.Api\Fcg.Application\obj\Debug\net8.0\Fcg.Application.AssemblyInfo.cs
+D:\Proj\Fcg.Api\Fcg.Application\obj\Debug\net8.0\Fcg.Application.csproj.CoreCompileInputs.cache
+D:\Proj\Fcg.Api\Fcg.Application\obj\Debug\net8.0\Fcg.Application.dll
+D:\Proj\Fcg.Api\Fcg.Application\obj\Debug\net8.0\refint\Fcg.Application.dll
+D:\Proj\Fcg.Api\Fcg.Application\obj\Debug\net8.0\Fcg.Application.pdb
+D:\Proj\Fcg.Api\Fcg.Application\obj\Debug\net8.0\ref\Fcg.Application.dll

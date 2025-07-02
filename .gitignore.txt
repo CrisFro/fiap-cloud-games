@@ -1,0 +1,36 @@
+# Build
+bin/
+obj/
+artifacts/
+*.log
+
+# User-specific files
+*.user
+*.suo
+
+# VS Code
+.vscode/
+.vs/
+
+# OS
+Thumbs.db
+ehthumbs.db
+.DS_Store
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# EF Core
+Migrations/
+
+# Secrets
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# JetBrains
+.idea/
+*.sln.iml
