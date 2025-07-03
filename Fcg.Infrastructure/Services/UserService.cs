@@ -26,7 +26,7 @@ public class UserService : IUserService
             Id = Guid.NewGuid(),
             Name = request.Name,
             Email = request.Email,
-            PasswordHash = request.Password // criptografar!
+            PasswordHash = request.Password
         };
 
         _users.Add(user);

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Proj\\Fcg.Api\\Fcg.Api\\Fcg.Api.csproj": {}
+    "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Fcg.Api.csproj": {}
   },
   "projects": {
-    "D:\\Proj\\Fcg.Api\\Fcg.Api\\Fcg.Api.csproj": {
+    "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Fcg.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Proj\\Fcg.Api\\Fcg.Api\\Fcg.Api.csproj",
+        "projectUniqueName": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Fcg.Api.csproj",
         "projectName": "Fcg.Api",
-        "projectPath": "D:\\Proj\\Fcg.Api\\Fcg.Api\\Fcg.Api.csproj",
-        "packagesPath": "C:\\Users\\crist\\.nuget\\packages\\",
-        "outputPath": "D:\\Proj\\Fcg.Api\\Fcg.Api\\obj\\",
+        "projectPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Fcg.Api.csproj",
+        "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\crist\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\willi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,19 +26,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "http://nuget.fiap.com.br/nuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\Proj\\Fcg.Api\\Fcg.Application\\Fcg.Application.csproj": {
-                "projectPath": "D:\\Proj\\Fcg.Api\\Fcg.Application\\Fcg.Application.csproj"
+              "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Application\\Fcg.Application.csproj": {
+                "projectPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Application\\Fcg.Application.csproj"
               },
-              "D:\\Proj\\Fcg.Api\\Fcg.Infrastructure\\Fcg.Infrastructure.csproj": {
-                "projectPath": "D:\\Proj\\Fcg.Api\\Fcg.Infrastructure\\Fcg.Infrastructure.csproj"
+              "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Infrastructure\\Fcg.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Infrastructure\\Fcg.Infrastructure.csproj"
               }
             }
           }
@@ -53,7 +51,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -83,24 +81,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Proj\\Fcg.Api\\Fcg.Application\\Fcg.Application.csproj": {
+    "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Application\\Fcg.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Proj\\Fcg.Api\\Fcg.Application\\Fcg.Application.csproj",
+        "projectUniqueName": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Application\\Fcg.Application.csproj",
         "projectName": "Fcg.Application",
-        "projectPath": "D:\\Proj\\Fcg.Api\\Fcg.Application\\Fcg.Application.csproj",
-        "packagesPath": "C:\\Users\\crist\\.nuget\\packages\\",
-        "outputPath": "D:\\Proj\\Fcg.Api\\Fcg.Application\\obj\\",
+        "projectPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Application\\Fcg.Application.csproj",
+        "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\crist\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\willi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -109,8 +107,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "http://nuget.fiap.com.br/nuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -129,7 +125,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -150,24 +146,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Proj\\Fcg.Api\\Fcg.Domain\\Fcg.Domain.csproj": {
+    "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Domain\\Fcg.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Proj\\Fcg.Api\\Fcg.Domain\\Fcg.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Domain\\Fcg.Domain.csproj",
         "projectName": "Fcg.Domain",
-        "projectPath": "D:\\Proj\\Fcg.Api\\Fcg.Domain\\Fcg.Domain.csproj",
-        "packagesPath": "C:\\Users\\crist\\.nuget\\packages\\",
-        "outputPath": "D:\\Proj\\Fcg.Api\\Fcg.Domain\\obj\\",
+        "projectPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Domain\\Fcg.Domain.csproj",
+        "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\crist\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\willi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -176,8 +172,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "http://nuget.fiap.com.br/nuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -196,7 +190,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -217,24 +211,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Proj\\Fcg.Api\\Fcg.Infrastructure\\Fcg.Infrastructure.csproj": {
+    "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Infrastructure\\Fcg.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Proj\\Fcg.Api\\Fcg.Infrastructure\\Fcg.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Infrastructure\\Fcg.Infrastructure.csproj",
         "projectName": "Fcg.Infrastructure",
-        "projectPath": "D:\\Proj\\Fcg.Api\\Fcg.Infrastructure\\Fcg.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\crist\\.nuget\\packages\\",
-        "outputPath": "D:\\Proj\\Fcg.Api\\Fcg.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Infrastructure\\Fcg.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\crist\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\willi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -243,19 +237,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "http://nuget.fiap.com.br/nuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\Proj\\Fcg.Api\\Fcg.Application\\Fcg.Application.csproj": {
-                "projectPath": "D:\\Proj\\Fcg.Api\\Fcg.Application\\Fcg.Application.csproj"
+              "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Application\\Fcg.Application.csproj": {
+                "projectPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Application\\Fcg.Application.csproj"
               },
-              "D:\\Proj\\Fcg.Api\\Fcg.Domain\\Fcg.Domain.csproj": {
-                "projectPath": "D:\\Proj\\Fcg.Api\\Fcg.Domain\\Fcg.Domain.csproj"
+              "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Domain\\Fcg.Domain.csproj": {
+                "projectPath": "C:\\Users\\willi\\OneDrive\\Área de Trabalho\\C#\\Fiap-Games\\Fcg.Domain\\Fcg.Domain.csproj"
               }
             }
           }
@@ -270,7 +262,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -303,7 +295,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

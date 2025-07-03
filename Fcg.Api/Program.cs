@@ -1,3 +1,4 @@
+using Fcg.Api.Middlewares;
 using Fcg.Application.Interfaces;
 using Fcg.Infrastructure.Services;
 
@@ -23,6 +24,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseLogMiddleware(); // Custom middleware for logging
 
 app.UseAuthorization();
 

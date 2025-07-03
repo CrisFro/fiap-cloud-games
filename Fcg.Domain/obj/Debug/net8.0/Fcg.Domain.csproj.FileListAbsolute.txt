@@ -9,3 +9,15 @@ D:\Proj\Fcg.Api\Fcg.Domain\obj\Debug\net8.0\Fcg.Domain.dll
 D:\Proj\Fcg.Api\Fcg.Domain\obj\Debug\net8.0\refint\Fcg.Domain.dll
 D:\Proj\Fcg.Api\Fcg.Domain\obj\Debug\net8.0\Fcg.Domain.pdb
 D:\Proj\Fcg.Api\Fcg.Domain\obj\Debug\net8.0\ref\Fcg.Domain.dll
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\bin\Debug\net8.0\Fcg.Domain.deps.json
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\bin\Debug\net8.0\Fcg.Domain.dll
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\bin\Debug\net8.0\Fcg.Domain.pdb
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\obj\Debug\net8.0\Fcg.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\obj\Debug\net8.0\Fcg.Domain.AssemblyInfoInputs.cache
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\obj\Debug\net8.0\Fcg.Domain.AssemblyInfo.cs
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\obj\Debug\net8.0\Fcg.Domain.csproj.CoreCompileInputs.cache
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\obj\Debug\net8.0\Fcg.Domain.sourcelink.json
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\obj\Debug\net8.0\Fcg.Domain.dll
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\obj\Debug\net8.0\refint\Fcg.Domain.dll
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\obj\Debug\net8.0\Fcg.Domain.pdb
+C:\Users\willi\OneDrive\Área de Trabalho\C#\Fiap-Games\Fcg.Domain\obj\Debug\net8.0\ref\Fcg.Domain.dll

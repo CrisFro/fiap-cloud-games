@@ -1,46 +1,10 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Proj\\Fcg.Api\\",
+  "WorkspaceRootPath": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{782112EC-5EA9-4D50-8F67-99FA32A25407}|Fcg.Application\\Fcg.Application.csproj|d:\\proj\\fcg.api\\fcg.application\\dtos\\registeruserresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{782112EC-5EA9-4D50-8F67-99FA32A25407}|Fcg.Application\\Fcg.Application.csproj|solutionrelative:fcg.application\\dtos\\registeruserresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{782112EC-5EA9-4D50-8F67-99FA32A25407}|Fcg.Application\\Fcg.Application.csproj|d:\\proj\\fcg.api\\fcg.application\\interfaces\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{782112EC-5EA9-4D50-8F67-99FA32A25407}|Fcg.Application\\Fcg.Application.csproj|solutionrelative:fcg.application\\interfaces\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{782112EC-5EA9-4D50-8F67-99FA32A25407}|Fcg.Application\\Fcg.Application.csproj|d:\\proj\\fcg.api\\fcg.application\\validations\\strongpasswordattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{782112EC-5EA9-4D50-8F67-99FA32A25407}|Fcg.Application\\Fcg.Application.csproj|solutionrelative:fcg.application\\validations\\strongpasswordattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{782112EC-5EA9-4D50-8F67-99FA32A25407}|Fcg.Application\\Fcg.Application.csproj|d:\\proj\\fcg.api\\fcg.application\\dtos\\registeruserrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{782112EC-5EA9-4D50-8F67-99FA32A25407}|Fcg.Application\\Fcg.Application.csproj|solutionrelative:fcg.application\\dtos\\registeruserrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|d:\\proj\\fcg.api\\fcg.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|c:\\users\\willi\\onedrive\\\u00E1rea de trabalho\\c#\\fiap-games\\fcg.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|solutionrelative:fcg.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|d:\\proj\\fcg.api\\fcg.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|solutionrelative:fcg.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F66CD555-27B2-490F-9181-4C25BC1787E5}|Fcg.Infrastructure\\Fcg.Infrastructure.csproj|d:\\proj\\fcg.api\\fcg.infrastructure\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F66CD555-27B2-490F-9181-4C25BC1787E5}|Fcg.Infrastructure\\Fcg.Infrastructure.csproj|solutionrelative:fcg.infrastructure\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F66CD555-27B2-490F-9181-4C25BC1787E5}|Fcg.Infrastructure\\Fcg.Infrastructure.csproj|d:\\proj\\fcg.api\\fcg.infrastructure\\data\\fcgdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F66CD555-27B2-490F-9181-4C25BC1787E5}|Fcg.Infrastructure\\Fcg.Infrastructure.csproj|solutionrelative:fcg.infrastructure\\data\\fcgdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C2A16848-186A-4D71-8E74-94229757BE68}|Fcg.Domain\\Fcg.Domain.csproj|d:\\proj\\fcg.api\\fcg.domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C2A16848-186A-4D71-8E74-94229757BE68}|Fcg.Domain\\Fcg.Domain.csproj|solutionrelative:fcg.domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C2A16848-186A-4D71-8E74-94229757BE68}|Fcg.Domain\\Fcg.Domain.csproj|d:\\proj\\fcg.api\\fcg.domain\\entities\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C2A16848-186A-4D71-8E74-94229757BE68}|Fcg.Domain\\Fcg.Domain.csproj|solutionrelative:fcg.domain\\entities\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -50,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 319,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -58,132 +22,20 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "StrongPasswordAttribute.cs",
-              "DocumentMoniker": "D:\\Proj\\Fcg.Api\\Fcg.Application\\Validations\\StrongPasswordAttribute.cs",
-              "RelativeDocumentMoniker": "Fcg.Application\\Validations\\StrongPasswordAttribute.cs",
-              "ToolTip": "D:\\Proj\\Fcg.Api\\Fcg.Application\\Validations\\StrongPasswordAttribute.cs",
-              "RelativeToolTip": "Fcg.Application\\Validations\\StrongPasswordAttribute.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T23:13:26.791Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "RegisterUserRequest.cs",
-              "DocumentMoniker": "D:\\Proj\\Fcg.Api\\Fcg.Application\\DTOs\\RegisterUserRequest.cs",
-              "RelativeDocumentMoniker": "Fcg.Application\\DTOs\\RegisterUserRequest.cs",
-              "ToolTip": "D:\\Proj\\Fcg.Api\\Fcg.Application\\DTOs\\RegisterUserRequest.cs",
-              "RelativeToolTip": "Fcg.Application\\DTOs\\RegisterUserRequest.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T19:35:02.209Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Proj\\Fcg.Api\\Fcg.Api\\Program.cs",
-              "RelativeDocumentMoniker": "Fcg.Api\\Program.cs",
-              "ToolTip": "D:\\Proj\\Fcg.Api\\Fcg.Api\\Program.cs",
-              "RelativeToolTip": "Fcg.Api\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T19:20:13.67Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "IUserService.cs",
-              "DocumentMoniker": "D:\\Proj\\Fcg.Api\\Fcg.Application\\Interfaces\\IUserService.cs",
-              "RelativeDocumentMoniker": "Fcg.Application\\Interfaces\\IUserService.cs",
-              "ToolTip": "D:\\Proj\\Fcg.Api\\Fcg.Application\\Interfaces\\IUserService.cs",
-              "RelativeToolTip": "Fcg.Application\\Interfaces\\IUserService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T19:14:08.149Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "RegisterUserResponse.cs",
-              "DocumentMoniker": "D:\\Proj\\Fcg.Api\\Fcg.Application\\DTOs\\RegisterUserResponse.cs",
-              "RelativeDocumentMoniker": "Fcg.Application\\DTOs\\RegisterUserResponse.cs",
-              "ToolTip": "D:\\Proj\\Fcg.Api\\Fcg.Application\\DTOs\\RegisterUserResponse.cs",
-              "RelativeToolTip": "Fcg.Application\\DTOs\\RegisterUserResponse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T19:13:43.649Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "UserService.cs",
-              "DocumentMoniker": "D:\\Proj\\Fcg.Api\\Fcg.Infrastructure\\Services\\UserService.cs",
-              "RelativeDocumentMoniker": "Fcg.Infrastructure\\Services\\UserService.cs",
-              "ToolTip": "D:\\Proj\\Fcg.Api\\Fcg.Infrastructure\\Services\\UserService.cs",
-              "RelativeToolTip": "Fcg.Infrastructure\\Services\\UserService.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T19:12:43.267Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\Proj\\Fcg.Api\\Fcg.Api\\Controllers\\AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Fcg.Api\\Controllers\\AuthController.cs",
-              "ToolTip": "D:\\Proj\\Fcg.Api\\Fcg.Api\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Controllers\\AuthController.cs",
               "RelativeToolTip": "Fcg.Api\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAQwBwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAACYAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T19:11:51.873Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "FcgDbContext.cs",
-              "DocumentMoniker": "D:\\Proj\\Fcg.Api\\Fcg.Infrastructure\\Data\\FcgDbContext.cs",
-              "RelativeDocumentMoniker": "Fcg.Infrastructure\\Data\\FcgDbContext.cs",
-              "ToolTip": "D:\\Proj\\Fcg.Api\\Fcg.Infrastructure\\Data\\FcgDbContext.cs",
-              "RelativeToolTip": "Fcg.Infrastructure\\Data\\FcgDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T18:53:17.955Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Game.cs",
-              "DocumentMoniker": "D:\\Proj\\Fcg.Api\\Fcg.Domain\\Entities\\Game.cs",
-              "RelativeDocumentMoniker": "Fcg.Domain\\Entities\\Game.cs",
-              "ToolTip": "D:\\Proj\\Fcg.Api\\Fcg.Domain\\Entities\\Game.cs",
-              "RelativeToolTip": "Fcg.Domain\\Entities\\Game.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T18:51:57.366Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "User.cs",
-              "DocumentMoniker": "D:\\Proj\\Fcg.Api\\Fcg.Domain\\Entities\\User.cs",
-              "RelativeDocumentMoniker": "Fcg.Domain\\Entities\\User.cs",
-              "ToolTip": "D:\\Proj\\Fcg.Api\\Fcg.Domain\\Entities\\User.cs",
-              "RelativeToolTip": "Fcg.Domain\\Entities\\User.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T18:51:32.433Z"
+              "WhenOpened": "2025-07-03T16:47:33.889Z",
+              "EditorCaption": ""
             }
           ]
         }
