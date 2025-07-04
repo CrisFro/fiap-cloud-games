@@ -1,4 +1,5 @@
-﻿using Fcg.Application.DTOs;
+﻿using Fcg.Api.Helpers;
+using Fcg.Application.DTOs;
 using Fcg.Application.Interfaces;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -35,8 +36,8 @@ namespace Fcg.Api.Controllers
 
             try
             {
-                var token = GenerateToken(request.Email, "User");
-                request.Password = token;
+                var hash = HashHelper.ComputeSha256Hash(request.Password);
+                request.Password = hash;
                 var response = await _userService.RegisterUserAsync(request);
 
                 if (!response.Success)

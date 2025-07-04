@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|c:\\users\\willi\\onedrive\\\u00E1rea de trabalho\\c#\\fiap-games\\fcg.api\\middlewares\\logmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|solutionrelative:fcg.api\\middlewares\\logmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|c:\\users\\willi\\onedrive\\\u00E1rea de trabalho\\c#\\fiap-games\\fcg.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|solutionrelative:fcg.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{782112EC-5EA9-4D50-8F67-99FA32A25407}|Fcg.Application\\Fcg.Application.csproj|c:\\users\\willi\\onedrive\\\u00E1rea de trabalho\\c#\\fiap-games\\fcg.application\\dtos\\loginuserrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{782112EC-5EA9-4D50-8F67-99FA32A25407}|Fcg.Application\\Fcg.Application.csproj|solutionrelative:fcg.application\\dtos\\loginuserrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 319,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,13 +34,39 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LoginUserRequest.cs",
+              "DocumentMoniker": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Application\\DTOs\\LoginUserRequest.cs",
+              "RelativeDocumentMoniker": "Fcg.Application\\DTOs\\LoginUserRequest.cs",
+              "ToolTip": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Application\\DTOs\\LoginUserRequest.cs",
+              "RelativeToolTip": "Fcg.Application\\DTOs\\LoginUserRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-03T21:03:21.407Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "LogMiddleware.cs",
+              "DocumentMoniker": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Middlewares\\LogMiddleware.cs",
+              "RelativeDocumentMoniker": "Fcg.Api\\Middlewares\\LogMiddleware.cs",
+              "ToolTip": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Middlewares\\LogMiddleware.cs",
+              "RelativeToolTip": "Fcg.Api\\Middlewares\\LogMiddleware.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-03T21:02:17.514Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Fcg.Api\\Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Controllers\\AuthController.cs",
               "RelativeToolTip": "Fcg.Api\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAAACYAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAwwFgAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-03T16:47:33.889Z",
               "EditorCaption": ""
