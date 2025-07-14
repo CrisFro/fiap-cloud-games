@@ -1,6 +1,7 @@
 using Fcg.Api.Middlewares;
 using Fcg.Application.Interfaces;
 using Fcg.Infrastructure.Services;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddSwaggerGen();
 
 // Injeção de dependência de serviços
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IPromotionService, PromotionService>();
 
 var app = builder.Build();
 
