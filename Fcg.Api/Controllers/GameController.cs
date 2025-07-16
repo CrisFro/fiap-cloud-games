@@ -1,8 +1,5 @@
-﻿using Fcg.Api.Helpers;
-using Fcg.Application.DTOs;
+﻿using Fcg.Application.DTOs;
 using Fcg.Application.Interfaces;
-using Fcg.Infrastructure.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fcg.Api.Controllers
@@ -45,6 +42,13 @@ namespace Fcg.Api.Controllers
                 _logger.LogError(ex, "Erro ao criar a promoção.");
                 return StatusCode(500, new { message = "Erro interno ao criar a promoção." });
             }
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAll()
+        {
+            var promotions = await _promotionService.GetAllPromotionsAsync();
+            return Ok(promotions);
         }
     }
 }

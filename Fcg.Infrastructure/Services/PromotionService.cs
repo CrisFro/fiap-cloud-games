@@ -40,4 +40,17 @@ public class PromotionService : IPromotionService
             GameId = Promotion.PromotionId
         };
     }
+
+    public async Task<List<PromotionResponse>> GetAllPromotionsAsync()
+    {
+        return _Promotion.Select(p => new PromotionResponse
+        {
+            PromotionId = p.PromotionId,
+            Title = p.Title,
+            Description = p.Description,
+            DiscountPercent = p.DiscountPercent,
+            StartDate = p.StartDate,
+            EndDate = p.EndDate
+        }).ToList();
+    }
 }

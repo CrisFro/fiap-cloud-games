@@ -40,4 +40,17 @@ public class GameService : IGameService
             GameId = Game.Id
         };
     }
+
+    public async Task<List<GameResponse>> GetAllGamesAsync()
+    {
+        return [.. _Games.Select(g => new GameResponse
+        {
+            Id = g.Id,
+            Title = g.Title,
+            Description = g.Description,
+            Genre = g.Genre,
+            CreatedAt = g.CreatedAt,
+            Price = g.Price
+        })];
+    }
 }

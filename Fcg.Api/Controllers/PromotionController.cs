@@ -46,5 +46,12 @@ namespace Fcg.Api.Controllers
                 return StatusCode(500, new { message = "Erro interno ao registrar o jogo." });
             }
         }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAll()
+        {
+            var games = await _gameService.GetAllGamesAsync();
+            return Ok(games);
+        }
     }
 }
