@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F66CD555-27B2-490F-9181-4C25BC1787E5}|Fcg.Infrastructure\\Fcg.Infrastructure.csproj|c:\\users\\willi\\onedrive\\\u00E1rea de trabalho\\c#\\fiap-games\\fcg.infrastructure\\services\\promotionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F66CD555-27B2-490F-9181-4C25BC1787E5}|Fcg.Infrastructure\\Fcg.Infrastructure.csproj|solutionrelative:fcg.infrastructure\\services\\promotionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|c:\\users\\willi\\onedrive\\\u00E1rea de trabalho\\c#\\fiap-games\\fcg.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C9FE5062-35FD-4D6D-B59B-9AE256199EB3}|Fcg.Api\\Fcg.Api.csproj|solutionrelative:fcg.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -18,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 319,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -27,19 +23,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "PromotionService.cs",
-              "DocumentMoniker": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Infrastructure\\Services\\PromotionService.cs",
-              "RelativeDocumentMoniker": "Fcg.Infrastructure\\Services\\PromotionService.cs",
-              "ToolTip": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Infrastructure\\Services\\PromotionService.cs",
-              "RelativeToolTip": "Fcg.Infrastructure\\Services\\PromotionService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-14T18:29:56.195Z",
-              "EditorCaption": ""
             }
           ]
         }
@@ -64,7 +47,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\willi\\OneDrive\\\u00C1rea de Trabalho\\C#\\Fiap-Games\\Fcg.Api\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Fcg.Api\\Controllers\\AuthController.cs",
