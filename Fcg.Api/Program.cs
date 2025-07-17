@@ -2,6 +2,8 @@ using Fcg.Api.Middlewares;
 using Fcg.Application.Interfaces;
 using Fcg.Infrastructure.Services;
 using System.Globalization;
+using Fcg.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Injeção de dependência de serviços
+// Configurar o DbContext para usar SQLite
+builder.Services.AddDbContext<FcgDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+// Injeï¿½ï¿½o de dependï¿½ncia de serviï¿½os
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();

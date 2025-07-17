@@ -9,5 +9,6 @@ namespace Fcg.Infrastructure.Data
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Game> Games => Set<Game>();
+        public DbSet<Promotion> Promotions => Set<Promotion>();
     }
 }

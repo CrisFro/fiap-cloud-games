@@ -56,18 +56,18 @@ namespace Fcg.Api.Controllers
         [ProducesResponseType(typeof(LoginUserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
+        public IActionResult Login([FromBody] LoginUserRequest request)
         {
             if (request.Email == "admin@email.com" && request.Password == "admin")
             {
                 var token = GenerateToken(request.Email, "Admin");
-                return Ok( new { token });
+                return Ok(new { token });
 
             }
             else if (request.Email == "user@email.com" && request.Password == "user")
             {
                 var token = GenerateToken(request.Email, "User");
-                return Ok( new { token });
+                return Ok(new { token });
             }
             else
             {
