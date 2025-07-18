@@ -18,6 +18,8 @@ namespace Fcg.Api.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly IConfiguration _configuration;
 
+
+
         public AuthController(IUserService userService, ILogger<AuthController> logger, IConfiguration configuration)
         {
             _userService = userService;

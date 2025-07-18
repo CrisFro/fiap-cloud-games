@@ -1,27 +1,36 @@
 ﻿using Fcg.Application.DTOs;
 using Fcg.Application.Interfaces;
 using Fcg.Domain.Entities;
+using System.Linq;
+using Fcg.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Fcg.Infrastructure.Services;
 
 public class GameService : IGameService
 {
-    private static readonly List<Game> _Games = new();
+    private readonly FcgDbContext _context;
+
+    public GameService(FcgDbContext context)
+    {
+        _context = context;
+    }
 
     public async Task<RegisterGameResponse> RegisterGameAsync(RegisterGameRequest request)
     {
-        var exists = _Games.Any(u => u.Title == request.Title);
+        // var exists = _context.Any(u => u.Title == request.Title);
 
-        if (exists)
-        {
-            return new RegisterGameResponse
-            {
-                Success = false,
-                Message = "Cadastro de jogo já existente"
-            };
-        }
+        // if (exists)
+        // {
+        //     return new RegisterGameResponse
+        //     {
+        //         Success = false,
+        //         Message = "Cadastro de jogo já existente"
+        //     };
+        // }
 
-        var Game = new Game
+        var newGame = new Game
         {
             Id = Guid.NewGuid(),
             Title = request.Title,
@@ -31,26 +40,31 @@ public class GameService : IGameService
             Price = request.Price,
         };
 
-        _Games.Add(Game);
+        _context.Games.Add(newGame);
+        await _context.SaveChangesAsync();
 
         return new RegisterGameResponse
         {
             Success = true,
             Message = "Jogo registrado com sucesso.",
-            GameId = Game.Id
+            GameId = newGame.Id
         };
     }
 
     public async Task<List<GameResponse>> GetAllGamesAsync()
     {
-        return [.. _Games.Select(g => new GameResponse
+        var games = await _context.Games.ToListAsync();
+
+        return games.Select(game => new GameResponse
         {
-            Id = g.Id,
-            Title = g.Title,
-            Description = g.Description,
-            Genre = g.Genre,
-            CreatedAt = g.CreatedAt,
-            Price = g.Price
-        })];
+            Id = game.Id,
+            Title = game.Title,
+            Description = game.Description,
+            Genre = game.Genre,
+            CreatedAt = game.CreatedAt,
+            Price = game.Price
+
+        })
+        .ToList();
     }
 }
