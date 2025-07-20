@@ -1,5 +1,5 @@
-﻿namespace Fcg.Application.DTOs
-{
+﻿namespace Fcg.Domain.Queries.Responses
+{ 
     public class PromotionResponse
     {
         public Guid PromotionId { get; set; }

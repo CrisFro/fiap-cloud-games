@@ -1,5 +1,4 @@
-﻿using Fcg.Application.Validations;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Fcg.Application.DTOs
 {

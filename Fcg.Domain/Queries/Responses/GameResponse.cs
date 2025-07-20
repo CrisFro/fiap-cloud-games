@@ -1,4 +1,4 @@
-﻿namespace Fcg.Application.DTOs
+﻿namespace Fcg.Domain.Queries.Responses
 {
     public class GameResponse
     {
