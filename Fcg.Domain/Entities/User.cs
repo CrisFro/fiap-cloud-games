@@ -29,5 +29,10 @@
         {
             PasswordHash = passwordHash;
         }
+
+        public void SetRole(string role)
+        {
+            Role = role;
+        }
     }
 }

@@ -3,6 +3,6 @@
     public interface IPasswordHasherService
     {
         string Hash(string senha);
-        bool Verify(string hash, string senha);
+        bool Verify(string senha, string hash);
     }
 }

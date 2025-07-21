@@ -32,7 +32,7 @@ namespace Fcg.Infrastructure.Repositories
             return entity.Id;
         }
 
-        public async Task<Domain.Entities.User?> GetByEmailUserAsync(string email)
+        public async Task<Domain.Entities.User?> GetUserByEmailAsync(string email)
         {
             var user = await (from u in _context.Users
                               where u.Email == email
@@ -40,6 +40,31 @@ namespace Fcg.Infrastructure.Repositories
                               .FirstOrDefaultAsync();
 
             return user;
+        }
+
+        public async Task<Domain.Entities.User?> GetUserByIdAsync(Guid id)
+        {
+            var user = await (from u in _context.Users
+                              where u.Id == id
+                              select new Domain.Entities.User(u.Id, u.Name, u.Email, u.PasswordHash, u.Role))
+                              .FirstOrDefaultAsync();
+
+            return user;
+        }
+
+        public async Task UpdateUserRoleAsync(Guid userId, string newRole)
+        {
+            var entity = new User
+            {
+                Id = userId,
+                Role = newRole
+            };
+
+            var entry = _context.Users.Entry(entity);
+
+            entry.Property(e => e.Role).IsModified = true;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

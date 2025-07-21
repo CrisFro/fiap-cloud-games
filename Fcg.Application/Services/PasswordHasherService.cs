@@ -10,7 +10,7 @@ namespace Fcg.Application.Services
         public string Hash(string senha) =>
             _hasher.HashPassword(null, senha);
 
-        public bool Verify(string hash, string senha) =>
+        public bool Verify(string senha, string hash) =>
             _hasher.VerifyHashedPassword(null, hash, senha) == PasswordVerificationResult.Success;
     }
 }

@@ -9,91 +9,100 @@ using Fcg.Infrastructure.Queries;
 using Fcg.Infrastructure.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#region Services Configuration
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
+#region Swagger Configuration
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Insira o token JWT com prefixo 'Bearer '"
+    });
+
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+#endregion
+
+#region Database
 builder.Services.AddDbContext<FcgDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+#endregion
 
+#region MediatR
 builder.Services.AddMediatR(fcg =>
     fcg.RegisterServicesFromAssemblyContaining<CreateUserRequest>());
+#endregion
 
-// Repositories
+#region Authentication & Authorization
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+});
+#endregion
+
+#region Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
+#endregion
 
-// Queries
+#region Queries
 builder.Services.AddScoped<IUserQuery, UserQuery>();
 builder.Services.AddScoped<IGameQuery, GameQuery>();
+#endregion
 
+#region Domain Services
 builder.Services.AddScoped<IPasswordHasherService, PasswordHasherService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+#endregion
+
+#endregion
 
 var app = builder.Build();
 
-#region MinimalApi
+#region Middleware Pipeline
 
-#region User
-app.MapGet("/api/users/{id}", async (Guid id, IUserQuery _userQuery) =>
-{
-    var user = await _userQuery.GetByIdUserAsync(id);
-
-    return user is not null ? Results.Ok(user) : Results.NotFound();
-});
-
-app.MapGet("/api/users", async (IUserQuery _userQuery) =>
-{
-    var user = await _userQuery.GetAllUsersAsync();
-
-    return user is not null ? Results.Ok(user) : Results.NotFound();
-});
-
-app.MapPost("/api/users", async (CreateUserRequest request, IMediator _mediator) =>
-{
-    var response = await _mediator.Send(request);
-
-    return response is not null
-        ? Results.Created($"/api/users/{response.UserId}", response)
-        : Results.BadRequest(response!.Message);
-});
-#endregion
-
-#region Game
-app.MapGet("/api/games/{id}", async (Guid id, IGameQuery _gameQuery) =>
-{
-    var game = await _gameQuery.GetByIdGameAsync(id);
-
-    return game is not null ? Results.Ok(game) : Results.NotFound();
-});
-
-app.MapGet("/api/games", async (IGameQuery _gameQuery) =>
-{
-    var games = await _gameQuery.GetAllGamesAsync();
-
-    return games is not null ? Results.Ok(games) : Results.NotFound();
-});
-
-app.MapPost("/api/games", async (CreateGameRequest request, IMediator _mediator) =>
-{
-    var response = await _mediator.Send(request);
-
-    return response is not null
-        ? Results.Created($"/api/games/{response.GameId}", response)
-        : Results.BadRequest(response!.Message);
-});
-#endregion
-
-#region Promotion
-
-#endregion
-
-#endregion
-
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -104,8 +113,94 @@ app.UseHttpsRedirection();
 
 app.UseLogMiddleware();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+#endregion
+
+#region Minimal APIs
+
+#region User Endpoints
+app.MapPost("/api/users", async (CreateUserRequest request, IMediator _mediator) =>
+{
+    var response = await _mediator.Send(request);
+
+    return response is not null
+        ? Results.Created($"/api/users/{response.UserId}", response)
+        : Results.BadRequest(response!.Message);
+}).AllowAnonymous();
+
+app.MapPost("/api/login", async (LoginRequest request, IMediator mediator) =>
+{
+    var response = await mediator.Send(request);
+
+    if (!response.Success)
+        return Results.Json(new { response.Message }, statusCode: StatusCodes.Status401Unauthorized);
+
+    return Results.Ok(new
+    {
+        response.Token,
+        response.UserId,
+        response.Email,
+        response.Message
+    });
+}).AllowAnonymous();
+
+app.MapGet("/api/users/{id}", async (Guid id, IUserQuery _userQuery) =>
+{
+    var user = await _userQuery.GetByIdUserAsync(id);
+
+    return user is not null ? Results.Ok(user) : Results.NotFound();
+}).RequireAuthorization();
+
+app.MapPut("/api/users/{id}/role", async (Guid id, UpdateRoleRequest request, IMediator _mediator) =>
+{
+    var response = await _mediator.Send(request);
+
+    return response is not null
+        ? Results.Created($"/api/users/{response.UserId}", response)
+        : Results.BadRequest(response!.Message);
+}).RequireAuthorization("AdminPolicy");
+
+app.MapGet("/api/users", async (IUserQuery _userQuery) =>
+{
+    var users = await _userQuery.GetAllUsersAsync();
+
+    return users is not null ? Results.Ok(users) : Results.NotFound();
+}).RequireAuthorization("AdminPolicy");
+#endregion
+
+#region Game Endpoints
+app.MapGet("/api/games/{id}", async (Guid id, IGameQuery _gameQuery) =>
+{
+    var game = await _gameQuery.GetByIdGameAsync(id);
+
+    return game is not null ? Results.Ok(game) : Results.NotFound();
+}).RequireAuthorization();
+
+app.MapGet("/api/games", async (IGameQuery _gameQuery) =>
+{
+    var games = await _gameQuery.GetAllGamesAsync();
+
+    return games is not null ? Results.Ok(games) : Results.NotFound();
+}).RequireAuthorization();
+
+app.MapPost("/api/games", async (CreateGameRequest request, IMediator _mediator) =>
+{
+    var response = await _mediator.Send(request);
+
+    return response is not null
+        ? Results.Created($"/api/games/{response.GameId}", response)
+        : Results.BadRequest(response!.Message);
+}).RequireAuthorization("AdminPolicy");
+#endregion
+
+#region Promotion
+
+#endregion
+
+#endregion
 
 app.Run();

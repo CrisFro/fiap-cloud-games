@@ -4,6 +4,7 @@ using Fcg.Domain.Entities;
 using Fcg.Domain.Repositories;
 using Fcg.Domain.Services;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Fcg.Application.Handlers
 {
@@ -11,19 +12,23 @@ namespace Fcg.Application.Handlers
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasherService _passwordHasherService;
+        private readonly ILogger<CreateUserHandler> _logger;
 
-        public CreateUserHandler(IUserRepository userRepository, IPasswordHasherService passwordHasherService)
+        public CreateUserHandler(IUserRepository userRepository, IPasswordHasherService passwordHasherService, ILogger<CreateUserHandler> logger)
         {
             _userRepository = userRepository;
             _passwordHasherService = passwordHasherService;
+            _logger = logger;
         }
 
         public async Task<CreateUserResponse> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByEmailUserAsync(request.Email);
+            var user = await _userRepository.GetUserByEmailAsync(request.Email);
 
             if (user != null)
             {
+                _logger.LogWarning($"Tentativa de criar usuário com e-mail já existente: {request.Email}");
+
                 return new CreateUserResponse
                 {
                     Success = false,
@@ -32,10 +37,11 @@ namespace Fcg.Application.Handlers
             }
 
             user = new User(request.Name, request.Email);
-
             user.SetPassword(_passwordHasherService.Hash(request.Password));
 
             await _userRepository.CreateUserAsync(user);
+
+            _logger.LogInformation("Usuário criado com sucesso: {Email}, ID: {UserId}", user.Email, user.Id);
 
             return new CreateUserResponse
             {
