@@ -4,6 +4,7 @@ namespace Fcg.Domain.Repositories
 {
     public interface IPromotionRepository
     {
-        Task<Promotion> CreatePromotionAsync(Promotion promotion);
+        Task<Guid> CreatePromotionAsync(Promotion promotion);
+        Task<Promotion?> GetPromotionByTitleAsync(string title);
     }
 }

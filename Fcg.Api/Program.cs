@@ -85,11 +85,13 @@ builder.Services.AddAuthorization(options =>
 #region Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
+builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
 #endregion
 
 #region Queries
 builder.Services.AddScoped<IUserQuery, UserQuery>();
 builder.Services.AddScoped<IGameQuery, GameQuery>();
+builder.Services.AddScoped<IPromotionQuery, PromotionQuery>();
 #endregion
 
 #region Domain Services

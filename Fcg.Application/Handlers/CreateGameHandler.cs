@@ -3,16 +3,19 @@ using Fcg.Application.Responses;
 using Fcg.Domain.Entities;
 using Fcg.Domain.Repositories;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Fcg.Application.Handlers
 {
     public class CreateGameHandler : IRequestHandler<CreateGameRequest, CreateGameResponse>
     {
         private readonly IGameRepository _gameRepository;
+        private readonly ILogger<CreateGameHandler> _logger;
 
-        public CreateGameHandler(IGameRepository gameRepository)
+        public CreateGameHandler(IGameRepository gameRepository, ILogger<CreateGameHandler> logger)
         {
             _gameRepository = gameRepository;
+            _logger = logger;
         }
 
         public async Task<CreateGameResponse> Handle(CreateGameRequest request, CancellationToken cancellationToken)
@@ -21,10 +24,12 @@ namespace Fcg.Application.Handlers
 
             if (game != null)
             {
+                _logger.LogWarning($"Tentativa de criar jogo com título já existente: {request.Title}");
+
                 return new CreateGameResponse
                 {
                     Success = false,
-                    Message = "Cadastro de jogo já existente"
+                    Message = "Jogo já existente"
                 };
             }
 
@@ -32,10 +37,12 @@ namespace Fcg.Application.Handlers
 
             await _gameRepository.CreateGameAsync(game);
 
+            _logger.LogInformation("Jogo criado com sucesso: {Title}, ID: {Id}", game.Title, game.Id);
+
             return new CreateGameResponse
             {
                 Success = true,
-                Message = "Usuário registrado com sucesso.",
+                Message = "Jogo registrado com sucesso.",
                 GameId = game.Id
             };
         }

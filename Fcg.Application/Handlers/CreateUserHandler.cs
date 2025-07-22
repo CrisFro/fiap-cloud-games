@@ -41,7 +41,7 @@ namespace Fcg.Application.Handlers
 
             await _userRepository.CreateUserAsync(user);
 
-            _logger.LogInformation("Usuário criado com sucesso: {Email}, ID: {UserId}", user.Email, user.Id);
+            _logger.LogInformation("Usuário criado com sucesso: {Email}, ID: {Id}", user.Email, user.Id);
 
             return new CreateUserResponse
             {

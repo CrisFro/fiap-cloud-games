@@ -5,6 +5,6 @@ namespace Fcg.Domain.Queries
     public interface IPromotionQuery
     {
         Task<IEnumerable<PromotionResponse>> GetAllPromotionsAsync();
-        Task<PromotionResponse> GetByIdPromotionAsync(Guid promotionId);
+        Task<PromotionResponse?> GetByIdPromotionAsync(Guid promotionId);
     }
 }

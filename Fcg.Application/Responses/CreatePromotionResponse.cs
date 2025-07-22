@@ -1,9 +1,9 @@
-﻿namespace Fcg.Application.DTOs
+﻿namespace Fcg.Application.Responses
 {
     public class CreatePromotionResponse
     {
         public bool Success { get; set; }
         public string Message { get; set; } = string.Empty;
-        public Guid? GameId { get; set; }
+        public Guid? PromotionId { get; set; }
     }
 }
