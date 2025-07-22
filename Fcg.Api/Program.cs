@@ -199,7 +199,29 @@ app.MapPost("/api/games", async (CreateGameRequest request, IMediator _mediator)
 }).RequireAuthorization("AdminPolicy");
 #endregion
 
-#region Promotion
+#region Promotion Endpoints
+app.MapGet("/api/promotions/{id}", async (Guid id, IPromotionQuery _promotionQuery) =>
+{
+    var promotion = await _promotionQuery.GetByIdPromotionAsync(id);
+
+    return promotion is not null ? Results.Ok(promotion) : Results.NotFound();
+}).RequireAuthorization();
+
+app.MapGet("/api/promotions", async (IPromotionQuery _promotionQuery) =>
+{
+    var games = await _promotionQuery.GetAllPromotionsAsync();
+
+    return games is not null ? Results.Ok(games) : Results.NotFound();
+}).RequireAuthorization("AdminPolicy");
+
+app.MapPost("/api/promotions", async (CreatePromotionRequest request, IMediator _mediator) =>
+{
+    var response = await _mediator.Send(request);
+
+    return response is not null
+        ? Results.Created($"/api/promotions/{response.PromotionId}", response)
+        : Results.BadRequest(response!.Message);
+}).RequireAuthorization("AdminPolicy");
 
 #endregion
 
