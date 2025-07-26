@@ -6,5 +6,6 @@ namespace Fcg.Domain.Queries
     {
         Task<IEnumerable<UserResponse>> GetAllUsersAsync();
         Task<UserResponse> GetByIdUserAsync(Guid userId);
+        Task<IEnumerable<GameResponse>> GetLibraryByUserAsync(Guid userId);
     }
 }

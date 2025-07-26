@@ -48,5 +48,21 @@ namespace Fcg.Infrastructure.Repositories
 
             return game;
         }
+
+        public async Task<IEnumerable<Game>?> GetGamesByIdsAsync(IEnumerable<Guid> guids)
+        {
+            var games = await(from g in _context.Games
+                             where guids.Contains(g.Id)
+                              select new Game(
+                                 g.Id,
+                                 g.Title,
+                                 g.Description,
+                                 g.Genre,
+                                 g.Price,
+                                 g.CreatedAt))
+                              .ToListAsync();
+
+            return games;
+        }
     }
 }

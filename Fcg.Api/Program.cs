@@ -8,6 +8,7 @@ using Fcg.Infrastructure.Data;
 using Fcg.Infrastructure.Queries;
 using Fcg.Infrastructure.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -103,24 +104,6 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 var app = builder.Build();
 
-#region Middleware Pipeline
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseLogMiddleware();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
-#endregion
 
 #region Minimal APIs
 
@@ -153,6 +136,13 @@ app.MapPost("/api/login", async (LoginRequest request, IMediator mediator) =>
 app.MapGet("/api/users/{id}", async (Guid id, IUserQuery _userQuery) =>
 {
     var user = await _userQuery.GetByIdUserAsync(id);
+
+    return user is not null ? Results.Ok(user) : Results.NotFound();
+}).RequireAuthorization();
+
+app.MapGet("/api/users/{id}/games", async (Guid id, IUserQuery _userQuery) =>
+{
+    var user = await _userQuery.GetLibraryByUserAsync(id);
 
     return user is not null ? Results.Ok(user) : Results.NotFound();
 }).RequireAuthorization();
@@ -197,6 +187,15 @@ app.MapPost("/api/games", async (CreateGameRequest request, IMediator _mediator)
         ? Results.Created($"/api/games/{response.GameId}", response)
         : Results.BadRequest(response!.Message);
 }).RequireAuthorization("AdminPolicy");
+
+app.MapPost("/api/games/buy", async (BuyGameRequest request, IMediator _mediator) =>
+{
+    var response = await _mediator.Send(request);
+
+    return response is not null
+        ? Results.Created($"/api/users/{response.UserId}/games", response)
+        : Results.BadRequest(response!.Message);
+}).RequireAuthorization();
 #endregion
 
 #region Promotion Endpoints
@@ -224,6 +223,25 @@ app.MapPost("/api/promotions", async (CreatePromotionRequest request, IMediator 
 }).RequireAuthorization("AdminPolicy");
 
 #endregion
+
+#endregion
+
+#region Middleware Pipeline
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseLogMiddleware();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 #endregion
 

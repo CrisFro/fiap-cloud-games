@@ -8,5 +8,6 @@ namespace Fcg.Domain.Repositories
         Task<User?> GetUserByEmailAsync(string email);
         Task<User?> GetUserByIdAsync(Guid id);
         Task UpdateUserRoleAsync(Guid userId, string newRole);
+        Task UpdateUserLibraryAsync(User user);
     }
 }

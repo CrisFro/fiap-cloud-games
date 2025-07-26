@@ -18,6 +18,7 @@
             Price = price;
             CreatedAt = DateTime.UtcNow;
         }
+
         public Game(Guid id, string title, string description, string genre, decimal price, DateTime createAt)
         {
             Id = id;
