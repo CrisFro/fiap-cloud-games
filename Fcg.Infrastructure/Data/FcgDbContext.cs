@@ -1,4 +1,4 @@
-﻿using Fcg.Domain.Entities;
+﻿using Fcg.Infrastructure.Tables;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fcg.Infrastructure.Data
@@ -10,5 +10,6 @@ namespace Fcg.Infrastructure.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
+        public DbSet<UserGaming> UserGamings { get; set; }
     }
 }

@@ -2,11 +2,31 @@
 {
     public class Promotion
     {
-        public Guid PromotionId { get; set; } = default!;
-        public string Title { get; set; } = default!;
-        public string Description { get; set; } = default!;
-        public decimal DiscountPercent { get; set; } = default!;
-        public DateTime StartDate { get; set; } = DateTime.UtcNow;
-        public DateTime EndDate { get; set; } = DateTime.UtcNow;
+        public Guid Id { get;}
+        public string Title { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        public decimal DiscountPercent { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+
+        public Promotion(string title, string description, decimal discountPercent, DateTime startDate, DateTime endDate)
+        {
+            Id = Guid.NewGuid();
+            Title = title;
+            Description = description;
+            DiscountPercent = discountPercent;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
+
+        public Promotion(Guid id, string title, string description, decimal discountPercent, DateTime startDate, DateTime endDate)
+        {
+            Id = id;
+            Title = title;
+            Description = description;
+            DiscountPercent = discountPercent;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
     }
 }
