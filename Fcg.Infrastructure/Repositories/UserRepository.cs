@@ -2,6 +2,9 @@
 using Fcg.Domain.Repositories;
 using Fcg.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System; 
+using System.Linq; 
+using System.Collections.Generic; 
 
 namespace Fcg.Infrastructure.Repositories
 {
@@ -34,86 +37,89 @@ namespace Fcg.Infrastructure.Repositories
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            var user = await (from u in _context.Users
-                              join ug in _context.UserGamings on u.Id equals ug.UserId into games
-                              from g in games.DefaultIfEmpty()
-                              where u.Email == email
-                              select new User(
-                                  u.Id,
-                                  u.Name,
-                                  u.Email,
-                                  u.PasswordHash,
-                                  u.Library == null ?
-                                  new List<UserGaming>() :
-                                  u.Library.Select(x => new UserGaming(
-                                      new Game(
-                                          x.Game.Id,
-                                          x.Game.Title,
-                                          x.Game.Description,
-                                          x.Game.Genre,
-                                          x.Game.Price,
-                                          x.Game.CreatedAt),
-                                      x.PurchasedDate)).ToList(),
-                                  u.Role))
-                              .FirstOrDefaultAsync();
+            var userEntity = await _context.Users
+                .Include(u => u.Library!) 
+                    .ThenInclude(ug => ug.Game) 
+                .AsNoTracking() 
+                .FirstOrDefaultAsync(u => u.Email == email);
 
-            return user;
+            if (userEntity == null)
+            {
+                return null;
+            }
+
+            var domainUser = new User(
+                userEntity.Id,
+                userEntity.Name,
+                userEntity.Email,
+                userEntity.PasswordHash,
+                userEntity.Library?.Select(ug => new UserGaming(
+                    ug.Id, 
+                    new User(userEntity.Id, userEntity.Name, userEntity.Email, userEntity.PasswordHash, new List<UserGaming>(), userEntity.Role), // Passa uma instância de User simplificada para UserGaming, ou null se não for essencial para o construtor
+                    new Game(ug.Game.Id, ug.Game.Title, ug.Game.Description, ug.Game.Genre, ug.Game.Price, ug.Game.CreatedAt),
+                    ug.PurchasedDate
+                )) ?? new List<UserGaming>(),
+                userEntity.Role
+            );
+
+            return domainUser;
         }
 
         public async Task<User?> GetUserByIdAsync(Guid id)
         {
-            var user = await (from u in _context.Users
-                              join ug in _context.UserGamings on u.Id equals ug.UserId into games
-                              from g in games.DefaultIfEmpty()
-                              where u.Id == id
-                              select new User(
-                                  u.Id,
-                                  u.Name,
-                                  u.Email,
-                                  u.PasswordHash,
-                                  u.Library == null ?
-                                  new List<UserGaming>() :
-                                  u.Library.Select(x => new UserGaming(
-                                      new Game(
-                                          x.Game.Id,
-                                          x.Game.Title,
-                                          x.Game.Description,
-                                          x.Game.Genre,
-                                          x.Game.Price,
-                                          x.Game.CreatedAt),
-                                      x.PurchasedDate)).ToList(),
-                                  u.Role))
-                              .FirstOrDefaultAsync();
+            var userEntity = await _context.Users
+                .Include(u => u.Library!) 
+                    .ThenInclude(ug => ug.Game) 
+                .AsNoTracking() 
+                .FirstOrDefaultAsync(u => u.Id == id);
 
-            return user;
+            if (userEntity == null)
+            {
+                return null;
+            }
+
+            var domainUser = new User(
+                userEntity.Id,
+                userEntity.Name,
+                userEntity.Email,
+                userEntity.PasswordHash,
+                userEntity.Library?.Select(ug => new UserGaming(
+                    ug.Id,
+                    new User(userEntity.Id, userEntity.Name, userEntity.Email, userEntity.PasswordHash, new List<UserGaming>(), userEntity.Role), // Passa uma instância de User simplificada para UserGaming, ou null se não for essencial para o construtor
+                    new Game(ug.Game.Id, ug.Game.Title, ug.Game.Description, ug.Game.Genre, ug.Game.Price, ug.Game.CreatedAt),
+                    ug.PurchasedDate
+                )) ?? new List<UserGaming>(),
+                userEntity.Role
+            );
+
+            return domainUser;
         }
 
         public async Task UpdateUserLibraryAsync(User user)
         {
             if (user.GamesAdded != null && user.GamesAdded.Any())
             {
-                var userGamingEntities = user.GamesAdded.Select(ug => new Tables.UserGaming
+                var userGamingEntitiesToAdd = user.GamesAdded.Select(ug => new Tables.UserGaming
                 {
-                    Id = ug.Id,
+                    Id = ug.Id, 
                     UserId = user.Id,
                     GameId = ug.Game.Id,
                     PurchasedDate = ug.PurchasedDate
-                });
+                }).ToList(); 
 
-                _context.UserGamings.AddRange(userGamingEntities);
+                _context.UserGamings.AddRange(userGamingEntitiesToAdd);
             }
 
             if (user.GamesRemoved != null && user.GamesRemoved.Any())
             {
-                var userGamingEntities = user.GamesRemoved.Select(ug => new Tables.UserGaming
-                {
-                    Id = ug.Id,
-                    UserId = user.Id,
-                    GameId = ug.Game.Id,
-                    PurchasedDate = ug.PurchasedDate
-                });
+                var userGamingIdsToRemove = user.GamesRemoved.Select(ug => ug.Id).ToList();
 
-                _context.UserGamings.RemoveRange(userGamingEntities);
+                var existingUserGamingsToRemove = await _context.UserGamings
+                    .Where(ug => userGamingIdsToRemove.Contains(ug.Id))
+                    .ToListAsync();
+
+                // Remova as entidades encontradas
+                _context.UserGamings.RemoveRange(existingUserGamingsToRemove);
             }
 
             await _context.SaveChangesAsync();
@@ -121,15 +127,29 @@ namespace Fcg.Infrastructure.Repositories
 
         public async Task UpdateUserRoleAsync(Guid userId, string newRole)
         {
-            var entity = new Tables.User
+            var userEntity = await _context.Users.FindAsync(userId);
+
+            if (userEntity == null)
             {
-                Id = userId,
-                Role = newRole
-            };
+                throw new InvalidOperationException($"Usuário com Id {userId} não encontrado para atualizar o papel.");
+            }
 
-            var entry = _context.Users.Entry(entity);
+            userEntity.Role = newRole;
 
-            entry.Property(e => e.Role).IsModified = true;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserProfileAsync(User user)
+        {
+            var userEntity = await _context.Users.FindAsync(user.Id);
+
+            if (userEntity == null)
+            {
+                throw new InvalidOperationException($"Usuário com Id {user.Id} não encontrado para atualizar o perfil.");
+            }
+
+            userEntity.Name = user.Name;
+            userEntity.Email = user.Email;
 
             await _context.SaveChangesAsync();
         }

@@ -7,9 +7,11 @@ namespace Fcg.Infrastructure.Data
     {
         public FcgDbContext(DbContextOptions<FcgDbContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Game> Games { get; set; }
-        public DbSet<Promotion> Promotions { get; set; }
-        public DbSet<UserGaming> UserGamings { get; set; }
+
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Game> Games { get; set; }
+        public virtual DbSet<Promotion> Promotions { get; set; }
+        public virtual DbSet<UserGaming> UserGamings { get; set; }
+
     }
 }
