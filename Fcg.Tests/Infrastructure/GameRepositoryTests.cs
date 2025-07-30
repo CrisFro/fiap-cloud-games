@@ -1,165 +1,103 @@
-﻿using Fcg.Infrastructure.Data;
+﻿using Fcg.Domain.Entities;
 using Fcg.Infrastructure.Repositories;
-using Fcg.Domain.Entities;
-using Fcg.Infrastructure.Tables;
-using Fcg.Infrastructure.Tests.Mocks; // Importa as extensões do Mock
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using Xunit;
+using Fcg.Infrastructure.Tests.Fakers;
+using FluentAssertions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Xunit;
 
-namespace Fcg.Infrastructure.Tests.Repositories
+namespace Fcg.Infrastructure.Tests
 {
-    [Trait("Domain-infrastructure", "Game Repository")]
-    public class GameRepositoryTests
+    public class GameRepositoryTests : BaseRepositoryTests
     {
-        [Fact]
-        public async Task CreateGameAsync_AddsGameToDatabase()
+        private readonly GameRepository _gameRepository;
+
+        public GameRepositoryTests()
         {
-            // Arrange
-            var games = new List<Tables.Game>(); // Lista vazia para simular o banco
-            var mockSet = games.BuildMockDbSet();
-
-            mockSet.Setup(m => m.Add(It.IsAny<Tables.Game>())).Callback<Tables.Game>(games.Add); // Simula o Add
-
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Games).Returns(mockSet.Object);
-            mockContext.Setup(m => m.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1); // Simula SaveChangesAsync
-
-            var repository = new GameRepository(mockContext.Object);
-            var newGame = new Fcg.Domain.Entities.Game(Guid.NewGuid(), "New Test Game", "Description of new test game", "Strategy", 39.99m, DateTime.UtcNow);
-
-            // Act
-            var createdId = await repository.CreateGameAsync(newGame);
-
-            // Assert
-            Assert.NotEqual(Guid.Empty, createdId);
-            mockSet.Verify(m => m.Add(It.IsAny<Tables.Game>()), Times.Once()); // Verifica se Add foi chamado
-            mockContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once()); // Verifica se SaveChangesAsync foi chamado
-            Assert.Single(games); // Verifica se o jogo foi adicionado à lista mocada
-            Assert.Equal(newGame.Title, games.First().Title);
+            _gameRepository = new GameRepository(_context);
         }
 
         [Fact]
-        public async Task GetGameByTitleAsync_ReturnsGame_WhenTitleExists()
+        public async Task CreateGameAsync_ShouldAddGameToDatabase()
         {
             // Arrange
-            var existingGame = new Tables.Game { Id = Guid.NewGuid(), Title = "Existing Game", Description = "Desc", Genre = "Action", Price = 10m, CreatedAt = DateTime.UtcNow };
-            var games = new List<Tables.Game> { existingGame };
-
-            var mockSet = games.BuildMockDbSet();
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Games).Returns(mockSet.Object);
-
-            var repository = new GameRepository(mockContext.Object);
+            var game = EntityFakers.GameFaker.Generate();
 
             // Act
-            var result = await repository.GetGameByTitleAsync("Existing Game");
+            var gameId = await _gameRepository.CreateGameAsync(game);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(existingGame.Id, result.Id);
-            Assert.Equal(existingGame.Title, result.Title);
-        }
-
-
-        [Fact]
-        public async Task GetGameByTitleAsync_ReturnsNull_WhenTitleDoesNotExist()
-        {
-            // Arrange
-            var games = new List<Tables.Game>(); // Lista vazia
-
-            var mockSet = games.BuildMockDbSet();
-
-            // Crie uma instância vazia de DbContextOptions para o construtor
-            var options = new DbContextOptions<FcgDbContext>();
-            var mockContext = new Mock<FcgDbContext>(options); // PASSE AS OPÇÕES AQUI
-
-            mockContext.Setup(c => c.Games).Returns(mockSet.Object);
-
-            var repository = new GameRepository(mockContext.Object);
-
-            // Act
-            var result = await repository.GetGameByTitleAsync("Non Existent Game");
-
-            // Assert
-            Assert.Null(result);
-        }
-
-
-
-
-
-
-
-        [Fact]
-        public async Task GetGamesByIdsAsync_ReturnsCorrectGames_WhenIdsExist()
-        {
-            // Arrange
-            var game1 = new Tables.Game { Id = Guid.NewGuid(), Title = "Game A", Description = "Desc A", Genre = "Action", Price = 10m, CreatedAt = DateTime.UtcNow };
-            var game2 = new Tables.Game { Id = Guid.NewGuid(), Title = "Game B", Description = "Desc B", Genre = "RPG", Price = 20m, CreatedAt = DateTime.UtcNow };
-            var game3 = new Tables.Game { Id = Guid.NewGuid(), Title = "Game C", Description = "Desc C", Genre = "Puzzle", Price = 30m, CreatedAt = DateTime.UtcNow };
-            var games = new List<Tables.Game> { game1, game2, game3 };
-
-            var mockSet = games.BuildMockDbSet();
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Games).Returns(mockSet.Object);
-
-            var repository = new GameRepository(mockContext.Object);
-            var idsToRetrieve = new List<Guid> { game1.Id, game3.Id };
-
-            // Act
-            var result = await repository.GetGamesByIdsAsync(idsToRetrieve);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Count());
-            Assert.Contains(result, g => g.Id == game1.Id);
-            Assert.Contains(result, g => g.Id == game3.Id);
-            Assert.DoesNotContain(result, g => g.Id == game2.Id);
+            gameId.Should().NotBeEmpty();
+            var savedGameEntity = await _context.Games.FindAsync(gameId);
+            savedGameEntity.Should().NotBeNull();
+            savedGameEntity.Title.Should().Be(game.Title);
+            savedGameEntity.Description.Should().Be(game.Description);
+            savedGameEntity.Genre.Should().Be(game.Genre);
+            savedGameEntity.Price.Should().Be(game.Price);
         }
 
         [Fact]
-        public async Task GetGamesByIdsAsync_ReturnsEmptyList_WhenNoMatchingIds()
+        public async Task GetGameByTitleAsync_ShouldReturnGame_WhenGameExists()
         {
             // Arrange
-            var games = new List<Tables.Game> { new Tables.Game { Id = Guid.NewGuid(), Title = "Game X", Description = "Desc X", Genre = "Action", Price = 10m, CreatedAt = DateTime.UtcNow } };
-            var mockSet = games.BuildMockDbSet();
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Games).Returns(mockSet.Object);
-
-            var repository = new GameRepository(mockContext.Object);
-            var nonExistentIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+            var game = EntityFakers.GameFaker.Generate();
+            await _gameRepository.CreateGameAsync(game);
 
             // Act
-            var result = await repository.GetGamesByIdsAsync(nonExistentIds);
+            var retrievedGame = await _gameRepository.GetGameByTitleAsync(game.Title);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Empty(result);
+            retrievedGame.Should().NotBeNull();
+            retrievedGame.Id.Should().Be(game.Id);
+            retrievedGame.Title.Should().Be(game.Title);
         }
 
         [Fact]
-        public async Task GetGamesByIdsAsync_ReturnsEmptyList_WhenInputIdsAreEmpty()
+        public async Task GetGameByTitleAsync_ShouldReturnNull_WhenGameDoesNotExist()
         {
             // Arrange
-            var games = new List<Tables.Game> { new Tables.Game { Id = Guid.NewGuid(), Title = "Game X", Description = "Desc X", Genre = "Action", Price = 10m, CreatedAt = DateTime.UtcNow } };
-            var mockSet = games.BuildMockDbSet();
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Games).Returns(mockSet.Object);
-
-            var repository = new GameRepository(mockContext.Object);
-            var emptyIds = new List<Guid>();
+            var nonExistentTitle = "Non Existent Game";
 
             // Act
-            var result = await repository.GetGamesByIdsAsync(emptyIds);
+            var retrievedGame = await _gameRepository.GetGameByTitleAsync(nonExistentTitle);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Empty(result);
+            retrievedGame.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetGamesByIdsAsync_ShouldReturnGames_WhenGamesExist()
+        {
+            // Arrange
+            var games = EntityFakers.GameFaker.Generate(3); // Gerar 3 jogos
+            foreach (var game in games)
+            {
+                await _gameRepository.CreateGameAsync(game);
+            }
+            var gameIds = games.Select(g => g.Id).ToList();
+
+            // Act
+            var retrievedGames = await _gameRepository.GetGamesByIdsAsync(gameIds);
+
+            // Assert
+            retrievedGames.Should().NotBeNull();
+            retrievedGames.Should().HaveCount(3);
+            retrievedGames.Select(g => g.Id).Should().BeEquivalentTo(gameIds);
+        }
+
+        [Fact]
+        public async Task GetGamesByIdsAsync_ShouldReturnEmptyList_WhenNoGamesExistForIds()
+        {
+            // Arrange
+            var nonExistentIds = new[] { Guid.NewGuid(), Guid.NewGuid() };
+
+            // Act
+            var retrievedGames = await _gameRepository.GetGamesByIdsAsync(nonExistentIds);
+
+            // Assert
+            retrievedGames.Should().NotBeNull();
+            retrievedGames.Should().BeEmpty();
         }
     }
 }

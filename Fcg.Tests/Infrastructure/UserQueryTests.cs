@@ -1,218 +1,217 @@
-﻿using Fcg.Infrastructure.Data;
-using Fcg.Infrastructure.Queries;
-using Fcg.Infrastructure.Tables;
-using Fcg.Infrastructure.Tests.Mocks; // Importa as extensões do Mock
-using Fcg.Domain.Queries.Responses;
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using Xunit;
+﻿using Fcg.Domain.Entities;
+using Fcg.Infrastructure.Repositories;
+using Fcg.Infrastructure.Tests.Fakers;
+using FluentAssertions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Xunit;
 
-namespace Fcg.Infrastructure.Tests.Queries
+namespace Fcg.Infrastructure.Tests
 {
-    [Trait("Domain-infrastructure", "User Queries")]
-    public class UserQueryTests
+    public class UserRepositoryTests : BaseRepositoryTests
     {
-        [Fact]
-        public async Task GetAllUsersAsync_ReturnsAllUsers()
+        private readonly UserRepository _userRepository;
+
+        public UserRepositoryTests()
         {
-            // Arrange
-            var users = new List<User>
-            {
-                new User { Id = Guid.NewGuid(), Name = "User 1", Email = "user1@example.com", Role = "Player" },
-                new User { Id = Guid.NewGuid(), Name = "User 2", Email = "user2@example.com", Role = "Admin" }
-            };
-
-            var mockSet = users.BuildMockDbSet();
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Users).Returns(mockSet.Object);
-
-            var query = new UserQuery(mockContext.Object);
-
-            // Act
-            var result = await query.GetAllUsersAsync();
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Count());
-            Assert.Contains(result, u => u.Name == "User 1");
-            Assert.Contains(result, u => u.Name == "User 2");
+            _userRepository = new UserRepository(_context);
         }
 
         [Fact]
-        public async Task GetAllUsersAsync_ReturnsEmptyList_WhenNoUsersExist()
+        public async Task CreateUserAsync_ShouldAddUserToDatabase()
         {
             // Arrange
-            var users = new List<User>();
-
-            var mockSet = users.BuildMockDbSet();
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Users).Returns(mockSet.Object);
-
-            var query = new UserQuery(mockContext.Object);
+            var user = EntityFakers.UserFaker.Generate();
 
             // Act
-            var result = await query.GetAllUsersAsync();
+            var userId = await _userRepository.CreateUserAsync(user);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Empty(result);
+            userId.Should().NotBeEmpty();
+            var savedUserEntity = await _context.Users.FindAsync(userId);
+            savedUserEntity.Should().NotBeNull();
+            savedUserEntity.Name.Should().Be(user.Name);
+            savedUserEntity.Email.Should().Be(user.Email);
+            savedUserEntity.Role.Should().Be(user.Role);
         }
 
         [Fact]
-        public async Task GetByIdUserAsync_ReturnsUser_WhenUserExists()
+        public async Task GetUserByEmailAsync_ShouldReturnUser_WhenUserExists()
         {
             // Arrange
-            var userId = Guid.NewGuid();
-            var users = new List<User>
-            {
-                new User { Id = userId, Name = "Unique User", Email = "unique@example.com", Role = "Player" },
-                new User { Id = Guid.NewGuid(), Name = "Another User", Email = "another@example.com", Role = "Admin" }
-            };
-
-            var mockSet = users.BuildMockDbSet();
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Users).Returns(mockSet.Object);
-
-            var query = new UserQuery(mockContext.Object);
+            var user = EntityFakers.UserFaker.Generate();
+            await _userRepository.CreateUserAsync(user);
 
             // Act
-            var result = await query.GetByIdUserAsync(userId);
+            var retrievedUser = await _userRepository.GetUserByEmailAsync(user.Email);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(userId, result.Id);
-            Assert.Equal("Unique User", result.Name);
+            retrievedUser.Should().NotBeNull();
+            retrievedUser.Id.Should().Be(user.Id);
+            retrievedUser.Name.Should().Be(user.Name);
+            retrievedUser.Email.Should().Be(user.Email);
         }
 
         [Fact]
-        public async Task GetByIdUserAsync_ReturnsNull_WhenUserDoesNotExist()
+        public async Task GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist()
         {
             // Arrange
-            var users = new List<User>
-            {
-                new User { Id = Guid.NewGuid(), Name = "User 1", Email = "user1@example.com", Role = "Player" }
-            };
-            var nonExistentUserId = Guid.NewGuid();
-
-            var mockSet = users.BuildMockDbSet();
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Users).Returns(mockSet.Object);
-
-            var query = new UserQuery(mockContext.Object);
+            var nonExistentEmail = "nonexistent@example.com";
 
             // Act
-            var result = await query.GetByIdUserAsync(nonExistentUserId);
+            var retrievedUser = await _userRepository.GetUserByEmailAsync(nonExistentEmail);
 
             // Assert
-            Assert.Null(result);
+            retrievedUser.Should().BeNull();
         }
 
         [Fact]
-        public async Task GetLibraryByUserAsync_ReturnsGamesInUserLibrary()
+        public async Task GetUserByIdAsync_ShouldReturnUser_WhenUserExists()
         {
             // Arrange
-            var userId = Guid.NewGuid();
-            var game1Id = Guid.NewGuid();
-            var game2Id = Guid.NewGuid();
-
-            var users = new List<User>
-            {
-                new User { Id = userId, Name = "Library User", Email = "library@example.com", Role = "Player" }
-            };
-            var games = new List<Game>
-            {
-                new Game { Id = game1Id, Title = "Game A", Description = "Desc A", Genre = "Action", Price = 10m, CreatedAt = DateTime.UtcNow },
-                new Game { Id = game2Id, Title = "Game B", Description = "Desc B", Genre = "Puzzle", Price = 20m, CreatedAt = DateTime.UtcNow }
-            };
-            var userGamings = new List<UserGaming>
-            {
-                new UserGaming { Id = Guid.NewGuid(), UserId = userId, GameId = game1Id, Game = games.First(g => g.Id == game1Id), PurchasedDate = DateTime.UtcNow },
-                new UserGaming { Id = Guid.NewGuid(), UserId = userId, GameId = game2Id, Game = games.First(g => g.Id == game2Id), PurchasedDate = DateTime.UtcNow }
-            };
-
-            var mockUserSet = users.BuildMockDbSet();
-            var mockGameSet = games.BuildMockDbSet();
-            var mockUserGamingSet = userGamings.BuildMockDbSet();
-
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Users).Returns(mockUserSet.Object);
-            mockContext.Setup(c => c.Games).Returns(mockGameSet.Object);
-            mockContext.Setup(c => c.UserGamings).Returns(mockUserGamingSet.Object);
-
-            var query = new UserQuery(mockContext.Object);
+            var user = EntityFakers.UserFaker.Generate();
+            await _userRepository.CreateUserAsync(user);
 
             // Act
-            var result = await query.GetLibraryByUserAsync(userId);
+            var retrievedUser = await _userRepository.GetUserByIdAsync(user.Id);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Count());
-            Assert.Contains(result, g => g.Title == "Game A");
-            Assert.Contains(result, g => g.Title == "Game B");
+            retrievedUser.Should().NotBeNull();
+            retrievedUser.Id.Should().Be(user.Id);
+            retrievedUser.Name.Should().Be(user.Name);
+            retrievedUser.Email.Should().Be(user.Email);
         }
 
         [Fact]
-        public async Task GetLibraryByUserAsync_ReturnsEmptyList_WhenUserHasNoGames()
+        public async Task GetUserByIdAsync_ShouldReturnNull_WhenUserDoesNotExist()
         {
             // Arrange
-            var userId = Guid.NewGuid();
-            var users = new List<User>
-            {
-                new User { Id = userId, Name = "Empty Library User", Email = "empty@example.com", Role = "Player" }
-            };
-            var games = new List<Game>();
-            var userGamings = new List<UserGaming>(); // Vazio
-
-            var mockUserSet = users.BuildMockDbSet();
-            var mockGameSet = games.BuildMockDbSet();
-            var mockUserGamingSet = userGamings.BuildMockDbSet();
-
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Users).Returns(mockUserSet.Object);
-            mockContext.Setup(c => c.Games).Returns(mockGameSet.Object);
-            mockContext.Setup(c => c.UserGamings).Returns(mockUserGamingSet.Object);
-
-            var query = new UserQuery(mockContext.Object);
+            var nonExistentId = Guid.NewGuid();
 
             // Act
-            var result = await query.GetLibraryByUserAsync(userId);
+            var retrievedUser = await _userRepository.GetUserByIdAsync(nonExistentId);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Empty(result);
+            retrievedUser.Should().BeNull();
         }
 
         [Fact]
-        public async Task GetLibraryByUserAsync_ReturnsEmptyList_WhenUserDoesNotExist()
+        public async Task UpdateUserProfileAsync_ShouldUpdateUserNameAndEmail()
         {
             // Arrange
-            var users = new List<User>(); // Nenhum usuário
-            var games = new List<Game> { new Game { Id = Guid.NewGuid(), Title = "Game A", Description = "Desc A", Genre = "Action", Price = 10m, CreatedAt = DateTime.UtcNow } };
-            var userGamings = new List<UserGaming>();
+            var user = EntityFakers.UserFaker.Generate();
+            await _userRepository.CreateUserAsync(user);
 
-            var mockUserSet = users.BuildMockDbSet();
-            var mockGameSet = games.BuildMockDbSet();
-            var mockUserGamingSet = userGamings.BuildMockDbSet();
+            var updatedUser = await _userRepository.GetUserByIdAsync(user.Id);
+            updatedUser.Should().NotBeNull();
 
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Users).Returns(mockUserSet.Object);
-            mockContext.Setup(c => c.Games).Returns(mockGameSet.Object);
-            mockContext.Setup(c => c.UserGamings).Returns(mockUserGamingSet.Object);
-
-            var query = new UserQuery(mockContext.Object);
-
-            var nonExistentUserId = Guid.NewGuid();
+            var newName = "Updated Name";
+            var newEmail = "updated@example.com";
+            updatedUser.UpdateProfile(newName, newEmail);
 
             // Act
-            var result = await query.GetLibraryByUserAsync(nonExistentUserId);
+            await _userRepository.UpdateUserProfileAsync(updatedUser);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Empty(result);
+            var savedUser = await _userRepository.GetUserByIdAsync(user.Id);
+            savedUser.Should().NotBeNull();
+            savedUser.Name.Should().Be(newName);
+            savedUser.Email.Should().Be(newEmail);
+        }
+
+        [Fact]
+        public async Task UpdateUserRoleAsync_ShouldUpdateUserRole()
+        {
+            // Arrange
+            var user = EntityFakers.UserFaker.Generate();
+            await _userRepository.CreateUserAsync(user);
+
+            var newRole = "SuperAdmin";
+
+            // Act
+            await _userRepository.UpdateUserRoleAsync(user.Id, newRole);
+
+            // Assert
+            var savedUserEntity = await _context.Users.FindAsync(user.Id);
+            savedUserEntity.Should().NotBeNull();
+            savedUserEntity.Role.Should().Be(newRole);
+        }
+
+        [Fact]
+        public async Task UpdateUserLibraryAsync_ShouldAddGameToUserLibrary()
+        {
+            // Arrange
+            var user = EntityFakers.UserFaker.Generate();
+            await _userRepository.CreateUserAsync(user);
+
+            var game = EntityFakers.GameFaker.Generate();
+            // Para adicionar o jogo no contexto e simular o cenário real de dependência
+            _context.Games.Add(new Tables.Game
+            {
+                Id = game.Id,
+                Title = game.Title,
+                Description = game.Description,
+                Genre = game.Genre,
+                Price = game.Price,
+                CreatedAt = game.CreatedAt
+            });
+            await _context.SaveChangesAsync();
+
+            var userToUpdate = await _userRepository.GetUserByIdAsync(user.Id);
+            userToUpdate.Should().NotBeNull();
+            userToUpdate.AddGameToLibrary(game);
+
+            // Act
+            await _userRepository.UpdateUserLibraryAsync(userToUpdate);
+
+            // Assert
+            var savedUser = await _userRepository.GetUserByIdAsync(user.Id);
+            savedUser.Should().NotBeNull();
+            savedUser.Library.Should().ContainSingle(ug => ug.Game.Id == game.Id);
+        }
+
+        [Fact]
+        public async Task UpdateUserLibraryAsync_ShouldRemoveGameFromUserLibrary()
+        {
+            // Arrange
+            var user = EntityFakers.UserFaker.Generate();
+            var game = EntityFakers.GameFaker.Generate();
+
+            // Primeiro, crie o jogo e adicione-o ao contexto para que ele exista
+            _context.Games.Add(new Tables.Game
+            {
+                Id = game.Id,
+                Title = game.Title,
+                Description = game.Description,
+                Genre = game.Genre,
+                Price = game.Price,
+                CreatedAt = game.CreatedAt
+            });
+            await _context.SaveChangesAsync();
+
+            // Crie o usuário
+            await _userRepository.CreateUserAsync(user);
+
+            // Carregue o usuário e adicione o jogo à biblioteca (simulando uma operação anterior)
+            var userWithGame = await _userRepository.GetUserByIdAsync(user.Id);
+            userWithGame.Should().NotBeNull();
+            userWithGame.AddGameToLibrary(game);
+            await _userRepository.UpdateUserLibraryAsync(userWithGame); // Persiste a adição
+
+            // Agora, remova o jogo
+            var userToUpdate = await _userRepository.GetUserByIdAsync(user.Id);
+            userToUpdate.Should().NotBeNull();
+            userToUpdate.Library.Should().ContainSingle(ug => ug.Game.Id == game.Id); // Certifique-se de que o jogo está lá
+            userToUpdate.RemoveGameFromLibrary(game.Id);
+
+            // Act
+            await _userRepository.UpdateUserLibraryAsync(userToUpdate);
+
+            // Assert
+            var savedUser = await _userRepository.GetUserByIdAsync(user.Id);
+            savedUser.Should().NotBeNull();
+            savedUser.Library.Should().BeEmpty();
         }
     }
 }

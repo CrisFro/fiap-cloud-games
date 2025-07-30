@@ -18,7 +18,7 @@
             if (string.IsNullOrWhiteSpace(description))
                 throw new ArgumentException("Descrição Não pode ser vazio ou nulo.", nameof(description));
             if (discountPercent <= 0 || discountPercent > 100)
-                throw new ArgumentOutOfRangeException(nameof(discountPercent), "percemtual de Desconto deve estar entre 0 e 100.");
+                throw new ArgumentOutOfRangeException(nameof(discountPercent), "O percemtual de Desconto deve estar entre 0 e 100.");
             if (startDate == default)
                 throw new ArgumentException("A data de início deve ser informada.", nameof(startDate));
             if (endDate == default)
@@ -87,7 +87,8 @@
                 throw new ArgumentException("A data de fim deve ser informada.", nameof(newEndDate));
             if (newStartDate >= newEndDate)
                 throw new ArgumentException("A data de início deve ser menor ou igual a data fim.", nameof(newStartDate));
-                                             
+           
+
             StartDate = newStartDate.ToUniversalTime();
             EndDate = newEndDate.ToUniversalTime();
         }

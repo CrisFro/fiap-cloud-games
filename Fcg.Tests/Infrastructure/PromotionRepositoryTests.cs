@@ -1,85 +1,69 @@
-﻿using Fcg.Infrastructure.Data;
+﻿using Fcg.Domain.Entities;
 using Fcg.Infrastructure.Repositories;
-using Fcg.Domain.Entities;
-using Fcg.Infrastructure.Tables;
-using Fcg.Infrastructure.Tests.Mocks; // Importa as extensões do Mock
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using Xunit;
+using Fcg.Infrastructure.Tests.Fakers;
+using FluentAssertions;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Xunit;
 
-namespace Fcg.Infrastructure.Tests.Repositories
+namespace Fcg.Infrastructure.Tests
 {
-    [Trait("Domain-infrastructure", "Promotion Repository")]
-    public class PromotionRepositoryTests
+    public class PromotionRepositoryTests : BaseRepositoryTests
     {
-        [Fact]
-        public async Task CreatePromotionAsync_AddsPromotionToDatabase()
+        private readonly PromotionRepository _promotionRepository;
+
+        public PromotionRepositoryTests()
         {
-            // Arrange
-            var promotions = new List<Tables.Promotion>();
-            var mockSet = promotions.BuildMockDbSet();
-            mockSet.Setup(m => m.Add(It.IsAny<Tables.Promotion>())).Callback<Tables.Promotion>(promotions.Add);
-
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Promotions).Returns(mockSet.Object);
-            mockContext.Setup(m => m.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
-
-            var repository = new PromotionRepository(mockContext.Object);
-            var newPromotion = new Fcg.Domain.Entities.Promotion(Guid.NewGuid(), "New Test Promo", "Description of new test promo", 25, DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(10));
-
-            // Act
-            var createdId = await repository.CreatePromotionAsync(newPromotion);
-
-            // Assert
-            Assert.NotEqual(Guid.Empty, createdId);
-            mockSet.Verify(m => m.Add(It.IsAny<Tables.Promotion>()), Times.Once());
-            mockContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
-            Assert.Single(promotions);
-            Assert.Equal(newPromotion.Title, promotions.First().Title);
+            _promotionRepository = new PromotionRepository(_context);
         }
 
         [Fact]
-        public async Task GetPromotionByTitleAsync_ReturnsPromotion_WhenTitleExists()
+        public async Task CreatePromotionAsync_ShouldAddPromotionToDatabase()
         {
             // Arrange
-            var existingPromotion = new Tables.Promotion { Id = Guid.NewGuid(), Title = "Existing Promo", Description = "Desc", DiscountPercent = 10, StartDate = DateTime.UtcNow.AddDays(-5), EndDate = DateTime.UtcNow.AddDays(5) };
-            var promotions = new List<Tables.Promotion> { existingPromotion };
-
-            var mockSet = promotions.BuildMockDbSet();
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Promotions).Returns(mockSet.Object);
-
-            var repository = new PromotionRepository(mockContext.Object);
+            var promotion = EntityFakers.PromotionFaker.Generate();
 
             // Act
-            var result = await repository.GetPromotionByTitleAsync("Existing Promo");
+            var promotionId = await _promotionRepository.CreatePromotionAsync(promotion);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(existingPromotion.Id, result.Id);
-            Assert.Equal(existingPromotion.Title, result.Title);
+            promotionId.Should().NotBeEmpty();
+            var savedPromotionEntity = await _context.Promotions.FindAsync(promotionId);
+            savedPromotionEntity.Should().NotBeNull();
+            savedPromotionEntity.Title.Should().Be(promotion.Title);
+            savedPromotionEntity.Description.Should().Be(promotion.Description);
+            savedPromotionEntity.DiscountPercent.Should().Be(promotion.DiscountPercent);
+            savedPromotionEntity.StartDate.Should().BeCloseTo(promotion.StartDate, TimeSpan.FromSeconds(1)); // Comparar DateTime com tolerância
+            savedPromotionEntity.EndDate.Should().BeCloseTo(promotion.EndDate, TimeSpan.FromSeconds(1));     // Comparar DateTime com tolerância
         }
 
         [Fact]
-        public async Task GetPromotionByTitleAsync_ReturnsNull_WhenTitleDoesNotExist()
+        public async Task GetPromotionByTitleAsync_ShouldReturnPromotion_WhenPromotionExists()
         {
             // Arrange
-            var promotions = new List<Tables.Promotion>();
-            var mockSet = promotions.BuildMockDbSet();
-            var mockContext = new Mock<FcgDbContext>();
-            mockContext.Setup(c => c.Promotions).Returns(mockSet.Object);
-
-            var repository = new PromotionRepository(mockContext.Object);
+            var promotion = EntityFakers.PromotionFaker.Generate();
+            await _promotionRepository.CreatePromotionAsync(promotion);
 
             // Act
-            var result = await repository.GetPromotionByTitleAsync("Non Existent Promo");
+            var retrievedPromotion = await _promotionRepository.GetPromotionByTitleAsync(promotion.Title);
 
             // Assert
-            Assert.Null(result);
+            retrievedPromotion.Should().NotBeNull();
+            retrievedPromotion.Id.Should().Be(promotion.Id);
+            retrievedPromotion.Title.Should().Be(promotion.Title);
+        }
+
+        [Fact]
+        public async Task GetPromotionByTitleAsync_ShouldReturnNull_WhenPromotionDoesNotExist()
+        {
+            // Arrange
+            var nonExistentTitle = "Non Existent Promotion";
+
+            // Act
+            var retrievedPromotion = await _promotionRepository.GetPromotionByTitleAsync(nonExistentTitle);
+
+            // Assert
+            retrievedPromotion.Should().BeNull();
         }
     }
 }
