@@ -37,7 +37,7 @@ namespace Fcg.Application.Handlers
             }
 
             user = new User(request.Name, request.Email);
-            user.SetPassword(_passwordHasherService.Hash(request.Password));
+            user.SetPasswordHash(_passwordHasherService.Hash(request.Password));
 
             await _userRepository.CreateUserAsync(user);
 
