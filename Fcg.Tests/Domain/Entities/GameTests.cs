@@ -17,7 +17,7 @@ namespace Fcg.Tests.UnitTests
                 .CustomInstantiator(f => new Game(
                     f.Commerce.ProductName(),
                     f.Lorem.Sentence(),
-                    f.Commerce.Categories(1)[0],
+                    f.PickRandom<GenreEnum>(),
                     f.Finance.Amount(10, 1000)
                 ));
         }
@@ -32,7 +32,7 @@ namespace Fcg.Tests.UnitTests
             Assert.NotEqual(Guid.Empty, game.Id);
             Assert.False(string.IsNullOrWhiteSpace(game.Title));
             Assert.False(string.IsNullOrWhiteSpace(game.Description));
-            Assert.False(string.IsNullOrWhiteSpace(game.Genre));
+            Assert.True(Enum.IsDefined(typeof(GenreEnum), game.Genre));
             Assert.True(game.Price >= 0);
             Assert.NotEqual(default(DateTime), game.CreatedAt);
         }
@@ -76,10 +76,9 @@ namespace Fcg.Tests.UnitTests
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public void Game_Constructor_WithInvalidGenre_ShouldThrowArgumentException(string invalidGenre)
+        [InlineData((GenreEnum)0)] 
+        [InlineData((GenreEnum)999)] 
+        public void Game_Constructor_WithInvalidGenre_ShouldThrowArgumentException(GenreEnum invalidGenre)
         {
             // Arrange
             var faker = _gameFaker.Generate();
@@ -117,7 +116,7 @@ namespace Fcg.Tests.UnitTests
             var game = _gameFaker.Generate();
             var newTitle = "New Game Title";
             var newDescription = "New Game Description";
-            var newGenre = "New Genre";
+            var newGenre = GenreEnum.Aventura;
 
             // Act
             game.UpdateDetails(newTitle, newDescription, newGenre);
@@ -137,7 +136,7 @@ namespace Fcg.Tests.UnitTests
             // Arrange
             var game = _gameFaker.Generate();
             var newDescription = "New Game Description";
-            var newGenre = "New Genre";
+            var newGenre = GenreEnum.Aventura;
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => game.UpdateDetails(invalidTitle, newDescription, newGenre));

@@ -30,6 +30,12 @@ namespace Fcg.Infrastructure.Tables.Mapping
 
             builder.Property(p => p.EndDate)
                 .IsRequired();
+
+            builder.Property(p => p.Genre)
+                .IsRequired();
+
+            builder.ToTable(t => t.HasCheckConstraint("CK_Promotions_DiscountPercent_0_100",
+               "\"DiscountPercent\" >= 0 AND \"DiscountPercent\" <= 100"));
         }
     }
 }

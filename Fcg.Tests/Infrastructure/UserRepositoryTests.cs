@@ -1,4 +1,5 @@
-﻿using Fcg.Infrastructure.Data;
+﻿using Fcg.Domain.Entities;
+using Fcg.Infrastructure.Data;
 using Fcg.Infrastructure.Repositories;
 using Fcg.Infrastructure.Tests.Mocks;
 using Microsoft.EntityFrameworkCore;
@@ -52,8 +53,8 @@ namespace Fcg.Infrastructure.Tests.Repositories
         public async Task GetUserByEmailAsync_ReturnsUser_WhenEmailExists_InMemory()
         {
             // Arrange
-            var game1 = new Game { Id = Guid.NewGuid(), Title = "Game 1", Description = "D1", Genre = "A", Price = 10m, CreatedAt = DateTime.UtcNow };
-            var game2 = new Game { Id = Guid.NewGuid(), Title = "Game 2", Description = "D2", Genre = "B", Price = 20m, CreatedAt = DateTime.UtcNow };
+            var game1 = new Game { Id = Guid.NewGuid(), Title = "Game 1", Description = "D1", Genre = 1, Price = 10m, CreatedAt = DateTime.UtcNow };
+            var game2 = new Game { Id = Guid.NewGuid(), Title = "Game 2", Description = "D2", Genre = 2, Price = 20m, CreatedAt = DateTime.UtcNow };
 
             var userGaming1 = new UserGaming { Id = Guid.NewGuid(), GameId = game1.Id, Game = game1, PurchasedDate = DateTime.UtcNow };
             var userGaming2 = new UserGaming { Id = Guid.NewGuid(), GameId = game2.Id, Game = game2, PurchasedDate = DateTime.UtcNow };
@@ -148,7 +149,7 @@ namespace Fcg.Infrastructure.Tests.Repositories
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var game1 = new Game { Id = Guid.NewGuid(), Title = "Game X", Description = "DX", Genre = "X", Price = 10m, CreatedAt = DateTime.UtcNow };
+            var game1 = new Game { Id = Guid.NewGuid(), Title = "Game X", Description = "DX", Genre = 1, Price = 10m, CreatedAt = DateTime.UtcNow };
             var userGaming1 = new UserGaming { Id = Guid.NewGuid(), GameId = game1.Id, Game = game1, PurchasedDate = DateTime.UtcNow };
 
             var existingUser = new User
@@ -322,8 +323,8 @@ namespace Fcg.Infrastructure.Tests.Repositories
             var userEntity = new User { Id = userId, Name = "User With Library", Email = "lib@example.com", PasswordHash = "hash3", Role = "Player", Library = new List<UserGaming>() };
             var gamesData = new List<Game>
             {
-                new Game { Id = Guid.NewGuid(), Title = "Game 1", Description = "D1", Genre = "A", Price = 10m, CreatedAt = DateTime.UtcNow },
-                new Game { Id = Guid.NewGuid(), Title = "Game 2", Description = "D2", Genre = "B", Price = 20m, CreatedAt = DateTime.UtcNow }
+                new Game { Id = Guid.NewGuid(), Title = "Game 1", Description = "D1", Genre = 1, Price = 10m, CreatedAt = DateTime.UtcNow },
+                new Game { Id = Guid.NewGuid(), Title = "Game 2", Description = "D2", Genre = 2, Price = 20m, CreatedAt = DateTime.UtcNow }
             };
 
             var users = new List<User> { userEntity };
@@ -348,8 +349,8 @@ namespace Fcg.Infrastructure.Tests.Repositories
             // Instancia o domainUser com os dados do userEntity para que o repositório o encontre.
             var domainUser = new Fcg.Domain.Entities.User(userId, userEntity.Name, userEntity.Email, userEntity.PasswordHash, new List<Fcg.Domain.Entities.UserGaming>(), userEntity.Role);
 
-            domainUser.AddGameToLibrary(new Fcg.Domain.Entities.Game(gamesData[0].Id, gamesData[0].Title, gamesData[0].Description, gamesData[0].Genre, gamesData[0].Price, gamesData[0].CreatedAt));
-            domainUser.AddGameToLibrary(new Fcg.Domain.Entities.Game(gamesData[1].Id, gamesData[1].Title, gamesData[1].Description, gamesData[1].Genre, gamesData[1].Price, gamesData[1].CreatedAt));
+            domainUser.AddGameToLibrary(new Fcg.Domain.Entities.Game(gamesData[0].Id, gamesData[0].Title, gamesData[0].Description, (GenreEnum)gamesData[0].Genre, gamesData[0].Price, gamesData[0].CreatedAt));
+            domainUser.AddGameToLibrary(new Fcg.Domain.Entities.Game(gamesData[1].Id, gamesData[1].Title, gamesData[1].Description, (GenreEnum)gamesData[1].Genre, gamesData[1].Price, gamesData[1].CreatedAt));
 
             // Act
             await repository.UpdateUserLibraryAsync(domainUser);
@@ -367,9 +368,9 @@ namespace Fcg.Infrastructure.Tests.Repositories
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var gameExisting = new Game { Id = Guid.NewGuid(), Title = "Game Existing", Description = "DE", Genre = "Existing", Price = 10m, CreatedAt = DateTime.UtcNow };
-            var gameToAdd = new Game { Id = Guid.NewGuid(), Title = "Game To Add", Description = "DTA", Genre = "Add", Price = 20m, CreatedAt = DateTime.UtcNow };
-            var gameToRemove = new Game { Id = Guid.NewGuid(), Title = "Game To Remove", Description = "DTR", Genre = "Remove", Price = 30m, CreatedAt = DateTime.UtcNow };
+            var gameExisting = new Game { Id = Guid.NewGuid(), Title = "Game Existing", Description = "DE", Genre = (int)GenreEnum.Outro, Price = 10m, CreatedAt = DateTime.UtcNow };
+            var gameToAdd = new Game { Id = Guid.NewGuid(), Title = "Game To Add", Description = "DTA", Genre = (int)GenreEnum.Outro, Price = 20m, CreatedAt = DateTime.UtcNow };
+            var gameToRemove = new Game { Id = Guid.NewGuid(), Title = "Game To Remove", Description = "DTR", Genre = (int)GenreEnum.Outro, Price = 30m, CreatedAt = DateTime.UtcNow };
 
             var userGamingExisting = new UserGaming { Id = Guid.NewGuid(), UserId = userId, GameId = gameExisting.Id, Game = gameExisting, PurchasedDate = DateTime.UtcNow };
             var userGamingToRemove = new UserGaming { Id = Guid.NewGuid(), UserId = userId, GameId = gameToRemove.Id, Game = gameToRemove, PurchasedDate = DateTime.UtcNow };
@@ -416,7 +417,7 @@ namespace Fcg.Infrastructure.Tests.Repositories
             foreach (var ugInDb in userGamingsInDb)
             {
                 // Certifique-se de que o Game de domínio também está correto
-                var domainGame = new Fcg.Domain.Entities.Game(ugInDb.Game.Id, ugInDb.Game.Title, ugInDb.Game.Description, ugInDb.Game.Genre, ugInDb.Game.Price, ugInDb.Game.CreatedAt);
+                var domainGame = new Fcg.Domain.Entities.Game(ugInDb.Game.Id, ugInDb.Game.Title, ugInDb.Game.Description, (GenreEnum)ugInDb.Game.Genre, ugInDb.Game.Price, ugInDb.Game.CreatedAt);
 
                 // Use o construtor que aceita User e Game, ou o construtor com ID e o próprio domainUser
                 var domainUserGaming = new Fcg.Domain.Entities.UserGaming(ugInDb.Id, domainUser, domainGame, ugInDb.PurchasedDate);
@@ -429,12 +430,12 @@ namespace Fcg.Infrastructure.Tests.Repositories
                 typeof(Fcg.Domain.Entities.User)
                     .GetField("_library", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                     .SetValue(domainUser, userGamingsInDb.Select(ug => new Fcg.Domain.Entities.UserGaming(ug.Id, domainUser,
-                        new Fcg.Domain.Entities.Game(ug.Game.Id, ug.Game.Title, ug.Game.Description, ug.Game.Genre, ug.Game.Price, ug.Game.CreatedAt), ug.PurchasedDate)).ToList());
+                        new Fcg.Domain.Entities.Game(ug.Game.Id, ug.Game.Title, ug.Game.Description, (GenreEnum)ug.Game.Genre, ug.Game.Price, ug.Game.CreatedAt), ug.PurchasedDate)).ToList());
             }
 
 
             // Simula operações no domínio
-            domainUser.AddGameToLibrary(new Fcg.Domain.Entities.Game(gameToAdd.Id, gameToAdd.Title, gameToAdd.Description, gameToAdd.Genre, gameToAdd.Price, gameToAdd.CreatedAt));
+            domainUser.AddGameToLibrary(new Fcg.Domain.Entities.Game(gameToAdd.Id, gameToAdd.Title, gameToAdd.Description, (GenreEnum)gameToAdd.Genre, gameToAdd.Price, gameToAdd.CreatedAt));
             domainUser.RemoveGameFromLibrary(gameToRemove.Id); // Passando o Guid do Game
 
             // Act

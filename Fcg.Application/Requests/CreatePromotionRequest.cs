@@ -1,4 +1,5 @@
 ﻿using Fcg.Application.Responses;
+using Fcg.Domain.Entities;
 using FluentValidation;
 using MediatR;
 
@@ -11,6 +12,7 @@ namespace Fcg.Application.Requests
         public decimal DiscountPercent { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public GenreEnum Genre { get; set; }
 
     }
 
@@ -27,8 +29,8 @@ namespace Fcg.Application.Requests
                 .WithMessage("A descrição da promoção é obrigatória.");
 
             RuleFor(p => p.DiscountPercent)
-                .InclusiveBetween(0.01m, 1.0m)
-                .WithMessage("O desconto deve ser entre 0.01 e 1.0 (percentual).");
+                .InclusiveBetween(0.01m, 100m)
+                .WithMessage("O desconto deve ser entre 0.01 e 100 (percentual).");
 
             RuleFor(p => p.StartDate)
                 .NotEmpty()
@@ -39,6 +41,10 @@ namespace Fcg.Application.Requests
                 .WithMessage("A data de término da promoção é obrigatória.")
                 .GreaterThan(p => p.StartDate)
                 .WithMessage("A data de término deve ser posterior à data de início.");
+
+            RuleFor(p => p.Genre)
+                .IsInEnum()
+                .WithMessage("O gênero informado não é válido.");
         }
     }
 }

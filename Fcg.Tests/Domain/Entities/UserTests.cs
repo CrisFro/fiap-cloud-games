@@ -19,7 +19,7 @@ namespace Fcg.Tests.UnitTests
                 .CustomInstantiator(f => new Game(
                     f.Commerce.ProductName(),
                     f.Lorem.Sentence(),
-                    f.Commerce.Categories(1)[0],
+                    GenreEnum.Acao,
                     f.Finance.Amount(10, 1000)
                 ));
 

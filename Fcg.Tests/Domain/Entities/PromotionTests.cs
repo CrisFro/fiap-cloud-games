@@ -17,7 +17,8 @@ namespace Fcg.Tests.UnitTests
                     f.Lorem.Paragraph(),
                     f.Random.Decimal(1, 100),
                     f.Date.Future(),
-                    f.Date.Future().AddDays(30)
+                    f.Date.Future().AddDays(30),
+                    GenreEnum.Outro
                 ));
         }
 
@@ -32,7 +33,8 @@ namespace Fcg.Tests.UnitTests
                 "Great discounts on selected games!",
                 50,
                 startDate,
-                endDate
+                endDate,
+                GenreEnum.Outro
             );
 
             // Act & Assert
@@ -60,7 +62,8 @@ namespace Fcg.Tests.UnitTests
                 faker.Description,
                 faker.DiscountPercent,
                 faker.StartDate,
-                faker.StartDate.AddDays(1)
+                faker.StartDate.AddDays(1),
+                GenreEnum.Outro
             ));
             Assert.Contains("Title Não pode ser vazio ou nulo.", exception.Message);
         }
@@ -80,7 +83,8 @@ namespace Fcg.Tests.UnitTests
                 invalidDescription,
                 faker.DiscountPercent,
                 faker.StartDate,
-                faker.StartDate.AddDays(1)
+                faker.StartDate.AddDays(1),
+                GenreEnum.Outro
             ));
             Assert.Contains("Descrição Não pode ser vazio ou nulo.", exception.Message);
         }
@@ -100,7 +104,8 @@ namespace Fcg.Tests.UnitTests
                 faker.Description,
                 invalidDiscount,
                 faker.StartDate,
-                faker.StartDate.AddDays(1)
+                faker.StartDate.AddDays(1),
+                GenreEnum.Outro
             ));
             Assert.Contains("O percemtual de Desconto deve estar entre 0 e 100.", exception.Message);
         }
@@ -119,7 +124,8 @@ namespace Fcg.Tests.UnitTests
                 faker.Description,
                 faker.DiscountPercent,
                 startDate,
-                startDate.AddDays(-1)
+                startDate.AddDays(-1),
+                GenreEnum.Outro
             ));
             Assert.Contains("A data de início deve ser menor ou igual a data fim.", exception.Message);
         }
@@ -200,7 +206,7 @@ namespace Fcg.Tests.UnitTests
             // Arrange
             var startDate = DateTime.UtcNow.AddDays(-5);
             var endDate = DateTime.UtcNow.AddDays(5);
-            var promotion = new Promotion("Active Promo", "Active", 10, startDate, endDate);
+            var promotion = new Promotion("Active Promo", "Active", 10, startDate, endDate, GenreEnum.Outro);
 
             // Act
             var isActive = promotion.IsActive(DateTime.UtcNow);
@@ -215,7 +221,7 @@ namespace Fcg.Tests.UnitTests
             // Arrange
             var startDate = DateTime.UtcNow.AddDays(5);
             var endDate = DateTime.UtcNow.AddDays(10);
-            var promotion = new Promotion("Future Promo", "Future", 10, startDate, endDate);
+            var promotion = new Promotion("Future Promo", "Future", 10, startDate, endDate, GenreEnum.Outro);
 
             // Act
             var isActive = promotion.IsActive(DateTime.UtcNow);
@@ -230,7 +236,7 @@ namespace Fcg.Tests.UnitTests
             // Arrange
             var startDate = DateTime.UtcNow.AddDays(-10);
             var endDate = DateTime.UtcNow.AddDays(-5);
-            var promotion = new Promotion("Past Promo", "Past", 10, startDate, endDate);
+            var promotion = new Promotion("Past Promo", "Past", 10, startDate, endDate, GenreEnum.Outro);
 
             // Act
             var isActive = promotion.IsActive(DateTime.UtcNow);

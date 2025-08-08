@@ -1,6 +1,7 @@
 using Fcg.Api.Middlewares;
 using Fcg.Application.Requests;
 using Fcg.Application.Services;
+using Fcg.Domain.Entities;
 using Fcg.Domain.Queries;
 using Fcg.Domain.Repositories;
 using Fcg.Domain.Services;
@@ -8,7 +9,6 @@ using Fcg.Infrastructure.Data;
 using Fcg.Infrastructure.Queries;
 using Fcg.Infrastructure.Repositories;
 using MediatR;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -115,8 +115,48 @@ app.MapPost("/api/users", async (CreateUserRequest request, IMediator _mediator)
     return response is not null
         ? Results.Created($"/api/users/{response.UserId}", response)
         : Results.BadRequest(response!.Message);
-}).AllowAnonymous();
+}).AllowAnonymous().WithTags("Users");
 
+app.MapGet("/api/users/{id}", async (Guid id, IUserQuery _userQuery) =>
+{
+    var user = await _userQuery.GetByIdUserAsync(id);
+
+    return user is not null ? Results.Ok(user) : Results.NotFound();
+}).RequireAuthorization().WithTags("Users");
+
+app.MapGet("/api/users/{id}/games", async (Guid id, IUserQuery _userQuery) =>
+{
+    var user = await _userQuery.GetLibraryByUserAsync(id);
+
+    return user is not null ? Results.Ok(user) : Results.NotFound();
+}).RequireAuthorization().WithTags("Users");
+
+app.MapPut("/api/users/{id}/role", async (Guid id, UpdateRoleRequest request, IMediator _mediator) =>
+{
+    var response = await _mediator.Send(request);
+
+    return response is not null
+        ? Results.Created($"/api/users/{response.UserId}", response)
+        : Results.BadRequest(response!.Message);
+}).RequireAuthorization("AdminPolicy").WithTags("Users");
+
+app.MapGet("/api/users", async (IUserQuery _userQuery) =>
+{
+    var users = await _userQuery.GetAllUsersAsync();
+
+    return users is not null ? Results.Ok(users) : Results.NotFound();
+}).RequireAuthorization("AdminPolicy").WithTags("Users");
+
+app.MapDelete("/api/users/{id}", async (Guid id, IUserRepository _userRepository) =>
+{
+    var deleted = await _userRepository.DeleteUserAsync(id);
+    return deleted
+        ? Results.NoContent()
+        : Results.NotFound();
+}).RequireAuthorization("AdminPolicy").WithTags("Users");
+#endregion
+
+#region Auth Endpoints
 app.MapPost("/api/login", async (LoginRequest request, IMediator mediator) =>
 {
     var response = await mediator.Send(request);
@@ -131,37 +171,22 @@ app.MapPost("/api/login", async (LoginRequest request, IMediator mediator) =>
         response.Email,
         response.Message
     });
-}).AllowAnonymous();
+}).AllowAnonymous().WithTags("Auth");
+#endregion
 
-app.MapGet("/api/users/{id}", async (Guid id, IUserQuery _userQuery) =>
+#region Genre Endpoints
+app.MapGet("/api/genres", () =>
 {
-    var user = await _userQuery.GetByIdUserAsync(id);
+    var genres = Enum.GetValues(typeof(GenreEnum))
+                     .Cast<GenreEnum>()
+                     .Select(g => new
+                     {
+                         Id = (int)g,
+                         Name = g.ToString()
+                     });
 
-    return user is not null ? Results.Ok(user) : Results.NotFound();
-}).RequireAuthorization();
-
-app.MapGet("/api/users/{id}/games", async (Guid id, IUserQuery _userQuery) =>
-{
-    var user = await _userQuery.GetLibraryByUserAsync(id);
-
-    return user is not null ? Results.Ok(user) : Results.NotFound();
-}).RequireAuthorization();
-
-app.MapPut("/api/users/{id}/role", async (Guid id, UpdateRoleRequest request, IMediator _mediator) =>
-{
-    var response = await _mediator.Send(request);
-
-    return response is not null
-        ? Results.Created($"/api/users/{response.UserId}", response)
-        : Results.BadRequest(response!.Message);
-}).RequireAuthorization("AdminPolicy");
-
-app.MapGet("/api/users", async (IUserQuery _userQuery) =>
-{
-    var users = await _userQuery.GetAllUsersAsync();
-
-    return users is not null ? Results.Ok(users) : Results.NotFound();
-}).RequireAuthorization("AdminPolicy");
+    return Results.Ok(genres);
+}).RequireAuthorization().WithTags("Genres");
 #endregion
 
 #region Game Endpoints
@@ -170,14 +195,14 @@ app.MapGet("/api/games/{id}", async (Guid id, IGameQuery _gameQuery) =>
     var game = await _gameQuery.GetByIdGameAsync(id);
 
     return game is not null ? Results.Ok(game) : Results.NotFound();
-}).RequireAuthorization();
+}).RequireAuthorization().WithTags("Games");
 
 app.MapGet("/api/games", async (IGameQuery _gameQuery) =>
 {
     var games = await _gameQuery.GetAllGamesAsync();
 
     return games is not null ? Results.Ok(games) : Results.NotFound();
-}).RequireAuthorization();
+}).RequireAuthorization().WithTags("Games");
 
 app.MapPost("/api/games", async (CreateGameRequest request, IMediator _mediator) =>
 {
@@ -186,7 +211,7 @@ app.MapPost("/api/games", async (CreateGameRequest request, IMediator _mediator)
     return response is not null
         ? Results.Created($"/api/games/{response.GameId}", response)
         : Results.BadRequest(response!.Message);
-}).RequireAuthorization("AdminPolicy");
+}).RequireAuthorization("AdminPolicy").WithTags("Games");
 
 app.MapPost("/api/games/buy", async (BuyGameRequest request, IMediator _mediator) =>
 {
@@ -195,7 +220,16 @@ app.MapPost("/api/games/buy", async (BuyGameRequest request, IMediator _mediator
     return response is not null
         ? Results.Created($"/api/users/{response.UserId}/games", response)
         : Results.BadRequest(response!.Message);
-}).RequireAuthorization();
+}).RequireAuthorization().WithTags("Games");
+
+app.MapDelete("/api/games/{id}", async (Guid id, IGameRepository _gameRepository) =>
+{
+    var deleted = await _gameRepository.DeleteGameAsync(id);
+
+    return deleted
+        ? Results.NoContent()
+        : Results.NotFound();
+}).RequireAuthorization("AdminPolicy").WithTags("Games");
 #endregion
 
 #region Promotion Endpoints
@@ -204,14 +238,14 @@ app.MapGet("/api/promotions/{id}", async (Guid id, IPromotionQuery _promotionQue
     var promotion = await _promotionQuery.GetByIdPromotionAsync(id);
 
     return promotion is not null ? Results.Ok(promotion) : Results.NotFound();
-}).RequireAuthorization();
+}).RequireAuthorization().WithTags("Promotions");
 
 app.MapGet("/api/promotions", async (IPromotionQuery _promotionQuery) =>
 {
     var games = await _promotionQuery.GetAllPromotionsAsync();
 
     return games is not null ? Results.Ok(games) : Results.NotFound();
-}).RequireAuthorization("AdminPolicy");
+}).RequireAuthorization("AdminPolicy").WithTags("Promotions");
 
 app.MapPost("/api/promotions", async (CreatePromotionRequest request, IMediator _mediator) =>
 {
@@ -220,10 +254,16 @@ app.MapPost("/api/promotions", async (CreatePromotionRequest request, IMediator 
     return response is not null
         ? Results.Created($"/api/promotions/{response.PromotionId}", response)
         : Results.BadRequest(response!.Message);
-}).RequireAuthorization("AdminPolicy");
+}).RequireAuthorization("AdminPolicy").WithTags("Promotions");
 
-#endregion
+app.MapDelete("/api/promotions/{id}", async (Guid id, IPromotionRepository _promotionRepository) =>
+{
+    var deleted = await _promotionRepository.DeletePromotionAsync(id);
 
+    return deleted
+        ? Results.NoContent()
+        : Results.NotFound();
+}).RequireAuthorization("AdminPolicy").WithTags("Promotions");
 #endregion
 
 #region Middleware Pipeline
@@ -246,3 +286,4 @@ app.MapControllers();
 #endregion
 
 app.Run();
+#endregion

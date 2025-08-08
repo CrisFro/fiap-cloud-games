@@ -49,7 +49,7 @@ namespace Fcg.Infrastructure.Tests.Fakers
                                 .CustomInstantiator(f => new Game(
                                     f.Commerce.ProductName(),
                                     f.Lorem.Sentence(),
-                                    f.Commerce.Categories(1)[0],
+                                    f.PickRandom<GenreEnum>(),
                                     f.Finance.Amount(0.99m, 99.99m)
                                 ));
                         }
@@ -74,12 +74,14 @@ namespace Fcg.Infrastructure.Tests.Fakers
                                 {
                                     var startDate = f.Date.Past(1, DateTime.UtcNow.AddDays(-30));
                                     var endDate = f.Date.Future(1, startDate.AddDays(60));
+                                    var genre = f.PickRandom<GenreEnum>();
                                     return new Promotion(
                                         f.Commerce.ProductName() + " Sale",
                                         f.Lorem.Sentence(),
                                         f.Finance.Amount(5, 50),
                                         startDate,
-                                        endDate
+                                        endDate,
+                                        genre
                                     );
                                 });
                         }

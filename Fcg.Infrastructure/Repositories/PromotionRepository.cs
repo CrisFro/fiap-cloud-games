@@ -23,7 +23,8 @@ namespace Fcg.Infrastructure.Repositories
                 Description = promotion.Description,
                 DiscountPercent = promotion.DiscountPercent,
                 StartDate = promotion.StartDate,
-                EndDate = promotion.EndDate
+                EndDate = promotion.EndDate,
+                Genre = (int)promotion.Genre
             };
 
             _context.Promotions.Add(entity);
@@ -35,18 +36,49 @@ namespace Fcg.Infrastructure.Repositories
 
         public async Task<Promotion?> GetPromotionByTitleAsync(string title)
         {
-            var promotion = await(from g in _context.Promotions
-                                  where g.Title == title
-                                  select new Promotion(
-                                      g.Id,
-                                      g.Title,
-                                      g.Description,
-                                      g.DiscountPercent,
-                                      g.StartDate,
-                                      g.EndDate))
-                                 .FirstOrDefaultAsync();
+            var promotion = await (from g in _context.Promotions
+                                   where g.Title == title
+                                   select new Promotion(
+                                       g.Id,
+                                       g.Title,
+                                       g.Description,
+                                       g.DiscountPercent,
+                                       g.StartDate,
+                                       g.EndDate,
+                                       (GenreEnum)g.Genre)
+                                 ).FirstOrDefaultAsync();
 
             return promotion;
+        }
+
+        public async Task<IEnumerable<Promotion>> GetValidPromotionsAsync()
+        {
+            var today = DateTime.UtcNow;
+
+            var promotions = await (from p in _context.Promotions
+                                    where p.StartDate <= today && p.EndDate >= today
+                                    select new Promotion(
+                                        p.Id,
+                                        p.Title,
+                                        p.Description,
+                                        p.DiscountPercent,
+                                        p.StartDate,
+                                        p.EndDate,
+                                        (GenreEnum)p.Genre)
+                                   ).ToListAsync();
+
+            return promotions;
+        }
+
+        public async Task<bool> DeletePromotionAsync(Guid promotionId)
+        {
+            var promotion = await _context.Promotions.FindAsync(promotionId);
+            if (promotion == null)
+                return false;
+
+            _context.Promotions.Remove(promotion);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

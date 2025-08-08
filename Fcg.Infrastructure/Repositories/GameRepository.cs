@@ -22,7 +22,7 @@ namespace Fcg.Infrastructure.Repositories
                 Title = game.Title,
                 Description = game.Description,
                 CreatedAt = game.CreatedAt,
-                Genre = game.Genre,
+                Genre = (int)game.Genre,
                 Price = game.Price
             };
 
@@ -38,10 +38,10 @@ namespace Fcg.Infrastructure.Repositories
             var game = await (from g in _context.Games
                               where g.Title == title
                               select new Game(
-                                  g.Id, 
-                                  g.Title, 
-                                  g.Description, 
-                                  g.Genre,
+                                  g.Id,
+                                  g.Title,
+                                  g.Description,
+                                  (GenreEnum)g.Genre,
                                   g.Price,
                                   g.CreatedAt))
                               .FirstOrDefaultAsync();
@@ -51,18 +51,33 @@ namespace Fcg.Infrastructure.Repositories
 
         public async Task<IEnumerable<Game>?> GetGamesByIdsAsync(IEnumerable<Guid> guids)
         {
-            var games = await(from g in _context.Games
-                             where guids.Contains(g.Id)
-                              select new Game(
-                                 g.Id,
-                                 g.Title,
-                                 g.Description,
-                                 g.Genre,
-                                 g.Price,
-                                 g.CreatedAt))
+            var games = await (from g in _context.Games
+                               where guids.Contains(g.Id)
+                               select new Game(
+                                   g.Id,
+                                   g.Title,
+                                   g.Description,
+                                   (GenreEnum)g.Genre,
+                                   g.Price,
+                                   g.CreatedAt))
                               .ToListAsync();
 
             return games;
+        }
+        public async Task<bool> DeleteGameAsync(Guid gameId)
+        {
+            await using var tx = await _context.Database.BeginTransactionAsync();
+
+            await _context.UserGamings
+                .Where(ug => ug.GameId == gameId)
+                .ExecuteDeleteAsync();
+
+            var affected = await _context.Games
+                .Where(g => g.Id == gameId)
+                .ExecuteDeleteAsync();
+
+            await tx.CommitAsync();
+            return affected > 0;
         }
     }
 }

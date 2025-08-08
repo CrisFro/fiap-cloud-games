@@ -3,16 +3,15 @@
     public class Promotion
     {
         public Guid Id { get; }
-        public string Title { get; private set; }
-        public string Description { get; private set; }
-        public decimal DiscountPercent { get; private set; }
-        public DateTime StartDate { get; private set; }
-        public DateTime EndDate { get; private set; }
+        public string Title { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        public decimal DiscountPercent { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public GenreEnum Genre { get; set; }
 
-        // Constructor for creating a new Promotion.
-        public Promotion(string title, string description, decimal discountPercent, DateTime startDate, DateTime endDate)
+        public Promotion(string title, string description, decimal discountPercent, DateTime startDate, DateTime endDate, GenreEnum genre)
         {
-            // Enforce invariants at creation
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentException("Title Não pode ser vazio ou nulo.", nameof(title));
             if (string.IsNullOrWhiteSpace(description))
@@ -25,17 +24,19 @@
                 throw new ArgumentException("A data de fim deve ser informada.", nameof(endDate));
             if (startDate >= endDate)
                 throw new ArgumentException("A data de início deve ser menor ou igual a data fim.", nameof(startDate));
+            if (!Enum.IsDefined(typeof(GenreEnum), genre))
+                throw new ArgumentException("O gênero é obrigatório e deve ser válido.", nameof(genre));
 
             Id = Guid.NewGuid();
             Title = title;
             Description = description;
             DiscountPercent = discountPercent;
-            StartDate = startDate.ToUniversalTime(); // Store as UTC
-            EndDate = endDate.ToUniversalTime();     // Store as UTC
+            StartDate = startDate.ToUniversalTime(); 
+            EndDate = endDate.ToUniversalTime();    
+            Genre = genre;
         }
 
-        // Constructor for rehydrating an existing Promotion.
-        public Promotion(Guid id, string title, string description, decimal discountPercent, DateTime startDate, DateTime endDate)
+        public Promotion(Guid id, string title, string description, decimal discountPercent, DateTime startDate, DateTime endDate, GenreEnum genre)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Id não pode ser vazio.", nameof(id));
@@ -49,6 +50,8 @@
                 throw new ArgumentException("A data de fim deve ser informada.", nameof(endDate));
             if (startDate >= endDate)
                 throw new ArgumentException("A data de início deve ser menor ou igual a data fim.", nameof(startDate));
+            if (!Enum.IsDefined(typeof(GenreEnum), genre))
+                throw new ArgumentException("O gênero é obrigatório e deve ser válido.", nameof(genre));
 
             Id = id;
             Title = title;
@@ -56,9 +59,8 @@
             DiscountPercent = discountPercent;
             StartDate = startDate;
             EndDate = endDate;
+            Genre = genre;
         }
-
-        // --- Behavior (Commands) ---
 
         public void UpdatePromotionDetails(string newTitle, string newDescription)
         {
@@ -69,6 +71,14 @@
 
             Title = newTitle;
             Description = newDescription;
+        }
+
+        public void UpdateGenre(GenreEnum newGenre)
+        {
+            if (!Enum.IsDefined(typeof(GenreEnum), newGenre))
+                throw new ArgumentException("O gênero é obrigatório e deve ser válido.", nameof(newGenre));
+
+            Genre = newGenre;
         }
 
         public void UpdateDiscount(decimal newDiscountPercent)
@@ -87,14 +97,11 @@
                 throw new ArgumentException("A data de fim deve ser informada.", nameof(newEndDate));
             if (newStartDate >= newEndDate)
                 throw new ArgumentException("A data de início deve ser menor ou igual a data fim.", nameof(newStartDate));
-           
 
             StartDate = newStartDate.ToUniversalTime();
             EndDate = newEndDate.ToUniversalTime();
         }
-
-        // --- Queries ---
-
+       
         public bool IsActive(DateTime checkDate)
         {
             var utcCheckDate = checkDate.ToUniversalTime();

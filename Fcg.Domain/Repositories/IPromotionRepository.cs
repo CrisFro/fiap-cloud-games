@@ -6,5 +6,7 @@ namespace Fcg.Domain.Repositories
     {
         Task<Guid> CreatePromotionAsync(Promotion promotion);
         Task<Promotion?> GetPromotionByTitleAsync(string title);
+        Task<IEnumerable<Promotion>> GetValidPromotionsAsync();
+        Task<bool> DeletePromotionAsync(Guid id);
     }
 }

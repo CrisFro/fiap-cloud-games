@@ -152,7 +152,7 @@ namespace Fcg.Infrastructure.Tests
                 Id = game.Id,
                 Title = game.Title,
                 Description = game.Description,
-                Genre = game.Genre,
+                Genre = (int)game.Genre,
                 Price = game.Price,
                 CreatedAt = game.CreatedAt
             });
@@ -169,6 +169,15 @@ namespace Fcg.Infrastructure.Tests
             var savedUser = await _userRepository.GetUserByIdAsync(user.Id);
             savedUser.Should().NotBeNull();
             savedUser.Library.Should().ContainSingle(ug => ug.Game.Id == game.Id);
+            _context.Games.Add(new Tables.Game
+            {
+                Id = game.Id,
+                Title = game.Title,
+                Description = game.Description,
+                Genre = (int)game.Genre,
+                Price = game.Price,
+                CreatedAt = game.CreatedAt
+            });
         }
 
         [Fact]
@@ -184,7 +193,7 @@ namespace Fcg.Infrastructure.Tests
                 Id = game.Id,
                 Title = game.Title,
                 Description = game.Description,
-                Genre = game.Genre,
+                Genre = (int)game.Genre,
                 Price = game.Price,
                 CreatedAt = game.CreatedAt
             });

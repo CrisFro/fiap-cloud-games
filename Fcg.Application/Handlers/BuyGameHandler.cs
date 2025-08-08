@@ -1,11 +1,9 @@
 ﻿using Fcg.Application.Requests;
 using Fcg.Application.Responses;
+using Fcg.Domain.Entities;
 using Fcg.Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic; 
-using System.Linq; 
-using System; 
 
 namespace Fcg.Application.Handlers
 {
@@ -13,12 +11,18 @@ namespace Fcg.Application.Handlers
     {
         private readonly IUserRepository _userRepository;
         private readonly IGameRepository _gameRepository;
+        private readonly IPromotionRepository _promotionRepository;
         private readonly ILogger<BuyGameHandler> _logger;
 
-        public BuyGameHandler(IUserRepository userRepository, IGameRepository gameRepository, ILogger<BuyGameHandler> logger)
+        public BuyGameHandler(
+            IUserRepository userRepository,
+            IGameRepository gameRepository,
+            IPromotionRepository promotionRepository,
+            ILogger<BuyGameHandler> logger)
         {
             _userRepository = userRepository;
             _gameRepository = gameRepository;
+            _promotionRepository = promotionRepository;
             _logger = logger;
         }
 
@@ -26,10 +30,9 @@ namespace Fcg.Application.Handlers
         {
             var user = await _userRepository.GetUserByIdAsync(request.UserId);
 
-            if (user == null)
+            if (user is null)
             {
-                _logger.LogWarning($"Usuário com Id {request.UserId} não encontrado!");
-
+                _logger.LogWarning("Usuário com Id {UserId} não encontrado!", request.UserId);
                 return new BuyGameResponse
                 {
                     Success = false,
@@ -38,11 +41,12 @@ namespace Fcg.Application.Handlers
             }
 
             var games = await _gameRepository.GetGamesByIdsAsync(request.GamesIds);
+            var gamesList = games?.ToList() ?? new List<Game>();
 
-            // Verifica se todos os jogos solicitados foram encontrados
-            if (games == null || games.Count() != request.GamesIds.Count())
+            if (gamesList.Count == 0 || gamesList.Count != request.GamesIds.Count())
             {
-                _logger.LogWarning("Alguns jogos não foram encontrados!");
+                _logger.LogWarning("Alguns jogos não foram encontrados! Solicitados: {Requested}, Encontrados: {Found}",
+                    request.GamesIds.Count(), gamesList.Count);
 
                 return new BuyGameResponse
                 {
@@ -51,16 +55,12 @@ namespace Fcg.Application.Handlers
                 };
             }
 
-            var gamesAlreadyOwned = new List<string>();
-            foreach (var game in games)
-            {
-                if (user.Library.Any(ug => ug.Game.Id == game.Id))
-                {
-                    gamesAlreadyOwned.Add(game.Title);
-                }
-            }
+            var gamesAlreadyOwned = gamesList
+                .Where(game => user.Library.Any(ug => ug.Game.Id == game.Id))
+                .Select(game => game.Title)
+                .ToList();
 
-            if (gamesAlreadyOwned.Any())
+            if (gamesAlreadyOwned.Count != 0)
             {
                 var message = $"O usuário já possui os seguintes jogos na biblioteca: {string.Join(", ", gamesAlreadyOwned)}";
                 _logger.LogWarning(message);
@@ -71,11 +71,43 @@ namespace Fcg.Application.Handlers
                 };
             }
 
-            foreach (var game in games)
+            var promotions = (await _promotionRepository.GetValidPromotionsAsync()).ToList();
+
+            decimal totalWithDiscount = 0m;
+            var items = new List<BuyGameItemBreakdown>();
+
+            foreach (var game in gamesList)
             {
+                decimal finalPrice = game.Price;
+
+                var matchingPromotion = promotions
+                    .Where(p => p.Genre == game.Genre)
+                    .OrderByDescending(p => p.DiscountPercent)
+                    .FirstOrDefault();
+
+                if (matchingPromotion == null)
+                {
+                    matchingPromotion = promotions
+                        .Where(p => p.Genre == GenreEnum.Outro)
+                        .OrderByDescending(p => p.DiscountPercent)
+                        .FirstOrDefault();
+                }
+
+                if (matchingPromotion != null && matchingPromotion.DiscountPercent > 0)
+                {
+                    var discount = game.Price * (matchingPromotion.DiscountPercent / 100m);
+                    finalPrice = Math.Max(0, game.Price - discount);
+
+                    _logger.LogInformation(
+                        "Desconto de {DiscountPercent}% aplicado ao jogo {Title} (gênero: {Genre}). Valor final: {FinalPrice}",
+                        matchingPromotion.DiscountPercent, game.Title, game.Genre, finalPrice
+                    );
+                }
+
+                totalWithDiscount += finalPrice;
+
                 user.AddGameToLibrary(game);
             }
-
 
             await _userRepository.UpdateUserLibraryAsync(user);
 
@@ -84,7 +116,8 @@ namespace Fcg.Application.Handlers
                 Success = true,
                 Message = "Jogos comprados com sucesso!",
                 GamesIds = request.GamesIds,
-                UserId = user.Id
+                UserId = user.Id,
+                TotalPriceWithDiscount = totalWithDiscount
             };
         }
     }

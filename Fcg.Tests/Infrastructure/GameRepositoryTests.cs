@@ -33,7 +33,7 @@ namespace Fcg.Infrastructure.Tests
             savedGameEntity.Should().NotBeNull();
             savedGameEntity.Title.Should().Be(game.Title);
             savedGameEntity.Description.Should().Be(game.Description);
-            savedGameEntity.Genre.Should().Be(game.Genre);
+            savedGameEntity.Genre.Should().Be((int)game.Genre);
             savedGameEntity.Price.Should().Be(game.Price);
         }
 

@@ -1,4 +1,6 @@
-﻿namespace Fcg.Domain.Queries.Responses
+﻿using Fcg.Domain.Entities;
+
+namespace Fcg.Domain.Queries.Responses
 { 
     public class PromotionResponse
     {

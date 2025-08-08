@@ -20,29 +20,66 @@ namespace Fcg.Application.Handlers
 
         public async Task<CreatePromotionResponse> Handle(CreatePromotionRequest request, CancellationToken cancellationToken)
         {
-            var promotion = await _promotionRepository.GetPromotionByTitleAsync(request.Title);
-
-            if (promotion != null)
+            try
             {
-                _logger.LogInformation("Promoção criada com sucesso: {Title}, ID: {Id}", promotion.Title, promotion.Id);
+                var title = request.Title?.Trim();
+                var description = request.Description?.Trim();
+
+                if (!Enum.IsDefined(typeof(GenreEnum), request.Genre))
+                {
+                    _logger.LogWarning("Tentativa de criar promoção com gênero inválido: {Genre}", request.Genre);
+                    return new CreatePromotionResponse
+                    {
+                        Success = false,
+                        Message = "Gênero inválido para a promoção."
+                    };
+                }
+
+                var existingPromotion = await _promotionRepository.GetPromotionByTitleAsync(title!);
+                if (existingPromotion != null)
+                {
+                    _logger.LogWarning("Tentativa de criar promoção já existente: {Title}", title);
+                    return new CreatePromotionResponse
+                    {
+                        Success = false,
+                        Message = "Promoção de jogo já existente"
+                    };
+                }
+
+                var promotion = new Promotion(
+                    title!,
+                    description!,
+                    request.DiscountPercent,
+                    request.StartDate,
+                    request.EndDate,
+                    request.Genre
+                );
+
+                await _promotionRepository.CreatePromotionAsync(promotion);
+
+                _logger.LogInformation(
+                    "Promoção criada com sucesso: {Title}, ID: {Id}, Gênero: {Genre}",
+                    promotion.Title,
+                    promotion.Id,
+                    promotion.Genre
+                );
 
                 return new CreatePromotionResponse
                 {
-                    Success = false,
-                    Message = "Promoção de jogo já existente"
+                    Success = true,
+                    Message = "Promoção registrada com sucesso.",
+                    PromotionId = promotion.Id
                 };
             }
-
-            promotion = new Promotion(request.Title, request.Description, request.DiscountPercent, request.StartDate, request.EndDate);
-
-            await _promotionRepository.CreatePromotionAsync(promotion);
-
-            return new CreatePromotionResponse
+            catch (Exception ex)
             {
-                Success = true,
-                Message = "Promoção registrada com sucesso.",
-                PromotionId = promotion.Id
-            };
+                _logger.LogError(ex, "Erro ao criar promoção: {Title}", request.Title);
+                return new CreatePromotionResponse
+                {
+                    Success = false,
+                    Message = "Falha ao criar promoção. Tente novamente."
+                };
+            }
         }
     }
 }

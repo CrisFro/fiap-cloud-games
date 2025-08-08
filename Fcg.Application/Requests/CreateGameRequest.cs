@@ -1,4 +1,5 @@
 ﻿using Fcg.Application.Responses;
+using Fcg.Domain.Entities;
 using FluentValidation;
 using MediatR;
 
@@ -8,8 +9,7 @@ namespace Fcg.Application.Requests
     {
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public string CreatedAt { get; set; } = null!;
-        public string Genre { get; set; } = null!;
+        public GenreEnum Genre { get; set; }
         public decimal Price { get; set; }
     }
 
@@ -25,20 +25,11 @@ namespace Fcg.Application.Requests
                 .NotEmpty().WithMessage("A descrição é obrigatória.")
                 .MinimumLength(50).WithMessage("A descrição deve ter pelo menos 50 caracteres.");
 
-            RuleFor(x => x.CreatedAt)
-                .NotEmpty().WithMessage("A data de lançamento é obrigatória.")
-                .Must(BeAValidDate).WithMessage("A data de lançamento deve ser uma data válida.");
-
             RuleFor(x => x.Genre)
                 .NotEmpty().WithMessage("A categoria é obrigatória.");
 
             RuleFor(x => x.Price)
-                .GreaterThan(0).WithMessage("O preço deve ser maior que zero.");
-        }
-
-        private bool BeAValidDate(string date)
-        {
-            return DateTime.TryParse(date, out _);
-        }
+              .GreaterThan(0).WithMessage("O preço deve ser maior que zero.");
+        }       
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Fcg.Infrastructure.Tables
+﻿using Fcg.Domain.Entities;
+
+namespace Fcg.Infrastructure.Tables
 {
     public class Promotion
     {
@@ -8,5 +10,6 @@
         public decimal DiscountPercent { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public int Genre { get; set; }
     }
 }

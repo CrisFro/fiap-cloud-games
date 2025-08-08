@@ -23,8 +23,7 @@ namespace Fcg.Infrastructure.Tables.Mapping
                 .HasMaxLength(500);
 
             builder.Property(g => g.Genre)
-                .IsRequired()
-                .HasMaxLength(50);
+                .IsRequired();
 
             builder.Property(g => g.CreatedAt)
                 .IsRequired();

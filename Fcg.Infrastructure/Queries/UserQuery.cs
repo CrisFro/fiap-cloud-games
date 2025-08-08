@@ -1,4 +1,5 @@
-﻿using Fcg.Domain.Queries;
+﻿using Fcg.Domain.Entities;
+using Fcg.Domain.Queries;
 using Fcg.Domain.Queries.Responses;
 using Fcg.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,7 @@ namespace Fcg.Infrastructure.Queries
                                    Id = g.Id,
                                    Title = g.Title,
                                    Description = g.Description,
-                                   Genre = g.Genre,
+                                   Genre = (GenreEnum)g.Genre,
                                    Price = g.Price,
                                    CreatedAt = g.CreatedAt
                                }).ToListAsync();

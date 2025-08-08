@@ -2,9 +2,6 @@
 using Fcg.Domain.Repositories;
 using Fcg.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System; 
-using System.Linq; 
-using System.Collections.Generic; 
 
 namespace Fcg.Infrastructure.Repositories
 {
@@ -56,7 +53,7 @@ namespace Fcg.Infrastructure.Repositories
                 userEntity.Library?.Select(ug => new UserGaming(
                     ug.Id, 
                     new User(userEntity.Id, userEntity.Name, userEntity.Email, userEntity.PasswordHash, new List<UserGaming>(), userEntity.Role), // Passa uma instância de User simplificada para UserGaming, ou null se não for essencial para o construtor
-                    new Game(ug.Game.Id, ug.Game.Title, ug.Game.Description, ug.Game.Genre, ug.Game.Price, ug.Game.CreatedAt),
+                    new Game(ug.Game.Id, ug.Game.Title, ug.Game.Description, (GenreEnum)ug.Game.Genre, ug.Game.Price, ug.Game.CreatedAt),
                     ug.PurchasedDate
                 )) ?? new List<UserGaming>(),
                 userEntity.Role
@@ -86,7 +83,7 @@ namespace Fcg.Infrastructure.Repositories
                 userEntity.Library?.Select(ug => new UserGaming(
                     ug.Id,
                     new User(userEntity.Id, userEntity.Name, userEntity.Email, userEntity.PasswordHash, new List<UserGaming>(), userEntity.Role), // Passa uma instância de User simplificada para UserGaming, ou null se não for essencial para o construtor
-                    new Game(ug.Game.Id, ug.Game.Title, ug.Game.Description, ug.Game.Genre, ug.Game.Price, ug.Game.CreatedAt),
+                    new Game(ug.Game.Id, ug.Game.Title, ug.Game.Description, (GenreEnum)ug.Game.Genre, ug.Game.Price, ug.Game.CreatedAt),
                     ug.PurchasedDate
                 )) ?? new List<UserGaming>(),
                 userEntity.Role
@@ -118,7 +115,6 @@ namespace Fcg.Infrastructure.Repositories
                     .Where(ug => userGamingIdsToRemove.Contains(ug.Id))
                     .ToListAsync();
 
-                // Remova as entidades encontradas
                 _context.UserGamings.RemoveRange(existingUserGamingsToRemove);
             }
 
@@ -152,6 +148,26 @@ namespace Fcg.Infrastructure.Repositories
             userEntity.Email = user.Email;
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> DeleteUserAsync(Guid userId)
+        {
+            var userEntity = await _context.Users
+                .Include(u => u.Library)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (userEntity == null)
+                return false;
+
+            if (userEntity.Library != null && userEntity.Library.Count != 0)
+            {
+                _context.UserGamings.RemoveRange(userEntity.Library);
+            }
+
+            _context.Users.Remove(userEntity);
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
