@@ -18,7 +18,7 @@
             if (!Enum.IsDefined(typeof(GenreEnum), genre))
                 throw new ArgumentException("Gênero inválido.", nameof(genre));
             if (price < 0)
-                throw new ArgumentOutOfRangeException(nameof(price), "Preço não pode ser vazio ou nulo.");
+                throw new ArgumentOutOfRangeException(nameof(price), "Preço não pode ser menor que 0.");
 
             Id = Guid.NewGuid();
             Title = title;
@@ -37,7 +37,7 @@
             if (!Enum.IsDefined(typeof(GenreEnum), genre))
                 throw new ArgumentException("Gênero inválido.", nameof(genre));
             if (price < 0)
-                throw new ArgumentOutOfRangeException(nameof(price), "Preço não pode ser vazio ou nulo.");
+                throw new ArgumentOutOfRangeException(nameof(price), "Preço não pode ser menor que 0.");
             
 
             Id = id;

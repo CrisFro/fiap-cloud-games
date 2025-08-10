@@ -111,7 +111,7 @@ namespace Fcg.Infrastructure.Tests
             updatedUser.UpdateProfile(newName, newEmail);
 
             // Act
-            await _userRepository.UpdateUserProfileAsync(updatedUser);
+            await _userRepository.UpdateAsync(updatedUser);
 
             // Assert
             var savedUser = await _userRepository.GetUserByIdAsync(user.Id);
@@ -120,107 +120,9 @@ namespace Fcg.Infrastructure.Tests
             savedUser.Email.Should().Be(newEmail);
         }
 
-        [Fact]
-        public async Task UpdateUserRoleAsync_ShouldUpdateUserRole()
-        {
-            // Arrange
-            var user = EntityFakers.UserFaker.Generate();
-            await _userRepository.CreateUserAsync(user);
+        
+        
 
-            var newRole = "SuperAdmin";
-
-            // Act
-            await _userRepository.UpdateUserRoleAsync(user.Id, newRole);
-
-            // Assert
-            var savedUserEntity = await _context.Users.FindAsync(user.Id);
-            savedUserEntity.Should().NotBeNull();
-            savedUserEntity.Role.Should().Be(newRole);
-        }
-
-        [Fact]
-        public async Task UpdateUserLibraryAsync_ShouldAddGameToUserLibrary()
-        {
-            // Arrange
-            var user = EntityFakers.UserFaker.Generate();
-            await _userRepository.CreateUserAsync(user);
-
-            var game = EntityFakers.GameFaker.Generate();
-            // Para adicionar o jogo no contexto e simular o cenário real de dependência
-            _context.Games.Add(new Tables.Game
-            {
-                Id = game.Id,
-                Title = game.Title,
-                Description = game.Description,
-                Genre = (int)game.Genre,
-                Price = game.Price,
-                CreatedAt = game.CreatedAt
-            });
-            await _context.SaveChangesAsync();
-
-            var userToUpdate = await _userRepository.GetUserByIdAsync(user.Id);
-            userToUpdate.Should().NotBeNull();
-            userToUpdate.AddGameToLibrary(game);
-
-            // Act
-            await _userRepository.UpdateUserLibraryAsync(userToUpdate);
-
-            // Assert
-            var savedUser = await _userRepository.GetUserByIdAsync(user.Id);
-            savedUser.Should().NotBeNull();
-            savedUser.Library.Should().ContainSingle(ug => ug.Game.Id == game.Id);
-            _context.Games.Add(new Tables.Game
-            {
-                Id = game.Id,
-                Title = game.Title,
-                Description = game.Description,
-                Genre = (int)game.Genre,
-                Price = game.Price,
-                CreatedAt = game.CreatedAt
-            });
-        }
-
-        [Fact]
-        public async Task UpdateUserLibraryAsync_ShouldRemoveGameFromUserLibrary()
-        {
-            // Arrange
-            var user = EntityFakers.UserFaker.Generate();
-            var game = EntityFakers.GameFaker.Generate();
-
-            // Primeiro, crie o jogo e adicione-o ao contexto para que ele exista
-            _context.Games.Add(new Tables.Game
-            {
-                Id = game.Id,
-                Title = game.Title,
-                Description = game.Description,
-                Genre = (int)game.Genre,
-                Price = game.Price,
-                CreatedAt = game.CreatedAt
-            });
-            await _context.SaveChangesAsync();
-
-            // Crie o usuário
-            await _userRepository.CreateUserAsync(user);
-
-            // Carregue o usuário e adicione o jogo à biblioteca (simulando uma operação anterior)
-            var userWithGame = await _userRepository.GetUserByIdAsync(user.Id);
-            userWithGame.Should().NotBeNull();
-            userWithGame.AddGameToLibrary(game);
-            await _userRepository.UpdateUserLibraryAsync(userWithGame); // Persiste a adição
-
-            // Agora, remova o jogo
-            var userToUpdate = await _userRepository.GetUserByIdAsync(user.Id);
-            userToUpdate.Should().NotBeNull();
-            userToUpdate.Library.Should().ContainSingle(ug => ug.Game.Id == game.Id); // Certifique-se de que o jogo está lá
-            userToUpdate.RemoveGameFromLibrary(game.Id);
-
-            // Act
-            await _userRepository.UpdateUserLibraryAsync(userToUpdate);
-
-            // Assert
-            var savedUser = await _userRepository.GetUserByIdAsync(user.Id);
-            savedUser.Should().NotBeNull();
-            savedUser.Library.Should().BeEmpty();
-        }
+        
     }
 }

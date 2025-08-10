@@ -34,7 +34,7 @@ namespace Fcg.Application.Handlers
 
             user.SetRole(request.NewRole);
 
-            await _userRepository.UpdateUserRoleAsync(user.Id, user.Role);
+            await _userRepository.UpdateAsync(user);
 
             return new UpdateRoleResponse
             {

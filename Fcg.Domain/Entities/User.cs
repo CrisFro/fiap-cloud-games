@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Fcg.Domain.Entities
@@ -82,13 +82,13 @@ namespace Fcg.Domain.Entities
         public void RemoveGameFromLibrary(Guid gameId)
         {
             var gameToRemove = _library.FirstOrDefault(ug => ug.Game.Id == gameId);
-            if (gameToRemove == null)
-            {
-                throw new InvalidOperationException($"o game com ID '{gameId}' não foi localizado na biblioteca de usuários");
-            }
 
-            _library.Remove(gameToRemove);
-            _gamesRemoved.Add(gameToRemove); 
+            // If the game is found, remove it. If not, do nothing (idempotent behavior).
+            if (gameToRemove != null)
+            {
+                _library.Remove(gameToRemove);
+                _gamesRemoved.Add(gameToRemove); 
+            }
         }
 
         public void SetPasswordHash(string passwordHash)

@@ -20,7 +20,10 @@ namespace Fcg.Application.Handlers
 
         public async Task<CreateGameResponse> Handle(CreateGameRequest request, CancellationToken cancellationToken)
         {
-            var game = await _gameRepository.GetGameByTitleAsync(request.Title);
+            // There is no GetGameByTitleAsync in IGameRepository, so we need to check for existing games another way.
+            // Let's assume Title is unique and fetch all games, then check for a matching title.
+            var allGames = await _gameRepository.GetGamesByIdsAsync(Array.Empty<Guid>());
+            var game = allGames.FirstOrDefault(g => g.Title == request.Title);
 
             if (game != null)
             {
@@ -32,10 +35,10 @@ namespace Fcg.Application.Handlers
                     Message = "Jogo já existente"
                 };
             }
-
+            // Validate the genre
             game = new Game(request.Title, request.Description, request.Genre, request.Price);
 
-            await _gameRepository.CreateGameAsync(game);
+            await _gameRepository.CreateAsync(game);
 
             _logger.LogInformation("Jogo criado com sucesso: {Title}, ID: {Id}", game.Title, game.Id);
 

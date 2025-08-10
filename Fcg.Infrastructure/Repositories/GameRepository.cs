@@ -2,6 +2,10 @@
 using Fcg.Domain.Repositories;
 using Fcg.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using Fcg.Domain; // Add this if GameGenre is in Fcg.Domain namespace
 
 namespace Fcg.Infrastructure.Repositories
 {
@@ -14,70 +18,53 @@ namespace Fcg.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Guid> CreateGameAsync(Game game)
+        public async Task CreateAsync(Game game)
         {
-            var entity = new Tables.Game
-            {
+            var gameTable = new Tables.Game {
                 Id = game.Id,
                 Title = game.Title,
                 Description = game.Description,
-                CreatedAt = game.CreatedAt,
                 Genre = (int)game.Genre,
-                Price = game.Price
+                Price = game.Price,
+                CreatedAt = game.CreatedAt
             };
-
-            _context.Games.Add(entity);
-
+            _context.Games.Add(gameTable);
             await _context.SaveChangesAsync();
-
-            return entity.Id;
         }
 
-        public async Task<Game?> GetGameByTitleAsync(string title)
+        public async Task<Game?> GetByIdAsync(System.Guid id)
         {
-            var game = await (from g in _context.Games
-                              where g.Title == title
-                              select new Game(
-                                  g.Id,
-                                  g.Title,
-                                  g.Description,
-                                  (GenreEnum)g.Genre,
-                                  g.Price,
-                                  g.CreatedAt))
-                              .FirstOrDefaultAsync();
+            var gameTable = await _context.Games.AsNoTracking().FirstOrDefaultAsync(g => g.Id == id);
+            if (gameTable == null)
+            {
+                return null;
+            }
 
-            return game;
+            return new Game(
+                gameTable.Id,
+                gameTable.Title,
+                gameTable.Description,
+                (GenreEnum)gameTable.Genre, // Changed from GameGenre to GenreEnum
+                gameTable.Price,
+                gameTable.CreatedAt
+            );
         }
 
-        public async Task<IEnumerable<Game>?> GetGamesByIdsAsync(IEnumerable<Guid> guids)
+        public async Task<IEnumerable<Game>> GetGamesByIdsAsync(IEnumerable<Guid> ids)
         {
-            var games = await (from g in _context.Games
-                               where guids.Contains(g.Id)
-                               select new Game(
-                                   g.Id,
-                                   g.Title,
-                                   g.Description,
-                                   (GenreEnum)g.Genre,
-                                   g.Price,
-                                   g.CreatedAt))
-                              .ToListAsync();
+            var gameTables = await _context.Games
+                .AsNoTracking()
+                .Where(g => ids.Contains(g.Id))
+                .ToListAsync();
 
-            return games;
-        }
-        public async Task<bool> DeleteGameAsync(Guid gameId)
-        {
-            await using var tx = await _context.Database.BeginTransactionAsync();
-
-            await _context.UserGamings
-                .Where(ug => ug.GameId == gameId)
-                .ExecuteDeleteAsync();
-
-            var affected = await _context.Games
-                .Where(g => g.Id == gameId)
-                .ExecuteDeleteAsync();
-
-            await tx.CommitAsync();
-            return affected > 0;
+            return gameTables.Select(gameTable => new Game(
+                gameTable.Id,
+                gameTable.Title,
+                gameTable.Description,
+                (GenreEnum)gameTable.Genre,
+                gameTable.Price,
+                gameTable.CreatedAt
+            ));
         }
     }
 }

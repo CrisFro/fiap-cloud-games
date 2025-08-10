@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using Fcg.Domain.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace Fcg.Infrastructure.Tests.Fakers
 {
@@ -15,7 +16,6 @@ namespace Fcg.Infrastructure.Tests.Fakers
         {
             get
             {
-                // Garante que o Faker seja inicializado apenas uma vez e de forma thread-safe
                 if (_userFaker == null)
                 {
                     lock (_lock)
@@ -23,15 +23,37 @@ namespace Fcg.Infrastructure.Tests.Fakers
                         if (_userFaker == null)
                         {
                             _userFaker = new Faker<User>()
+                                // Construtor simples (nome, email, role)
                                 .CustomInstantiator(f => new User(
                                     f.Person.FullName,
                                     f.Internet.Email(),
                                     f.PickRandom(new[] { "User", "Admin", "Moderator" })
-                                ));
+                                ))
+                                // Regras extras para o construtor completo, se necessário
+                                .RuleFor(u => u.Id, f => Guid.NewGuid())
+                                .RuleFor(u => u.PasswordHash, f => f.Internet.Password())
+                                .RuleFor(u => u.Role, f => f.PickRandom(new[] { "User", "Admin", "Moderator" }));
                         }
                     }
                 }
                 return _userFaker;
+            }
+        }
+
+        // Se quiser um faker para o construtor completo:
+        public static Faker<User> UserFakerFull
+        {
+            get
+            {
+                return new Faker<User>()
+                    .CustomInstantiator(f => new User(
+                        f.Random.Guid(),
+                        f.Person.FullName,
+                        f.Internet.Email(),
+                        f.Internet.Password(),
+                        new List<UserGaming>(), // ou gere UserGaming fakes se quiser
+                        f.PickRandom(new[] { "User", "Admin", "Moderator" })
+                    ));
             }
         }
 

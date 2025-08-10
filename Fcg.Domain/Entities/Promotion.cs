@@ -13,7 +13,7 @@
         public Promotion(string title, string description, decimal discountPercent, DateTime startDate, DateTime endDate, GenreEnum genre)
         {
             if (string.IsNullOrWhiteSpace(title))
-                throw new ArgumentException("Title Não pode ser vazio ou nulo.", nameof(title));
+                throw new ArgumentException("Título não pode ser vazio ou nulo.", nameof(title));
             if (string.IsNullOrWhiteSpace(description))
                 throw new ArgumentException("Descrição Não pode ser vazio ou nulo.", nameof(description));
             if (discountPercent <= 0 || discountPercent > 100)

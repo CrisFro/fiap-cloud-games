@@ -1,14 +1,8 @@
-﻿using Fcg.Domain.Queries.Responses;
-using Fcg.Infrastructure.Data;
+﻿using Fcg.Domain.Entities;
 using Fcg.Infrastructure.Queries;
-using Fcg.Infrastructure.Repositories;
-using Fcg.Infrastructure.Tables;
-using Fcg.Infrastructure.Tests.Mocks;
+using Fcg.Infrastructure.Tests.Fakers;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Moq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,128 +10,93 @@ using Xunit;
 namespace Fcg.Infrastructure.Tests.Queries
 {
     [Trait("Domain-infrastructure", "Promotion Queries")]
-    public class PromotionQueryTests
+    public class PromotionQueryTests : BaseRepositoryTests
     {
-        //[Fact]
-        //public async Task GetAllPromotionsAsync_ReturnsAllPromotions()
-        //{
-        //    // Arrange
-        //    var promotions = new List<Promotion>
-        //    {
-        //        new Promotion { Id = Guid.NewGuid(), Title = "Promo 1", Description = "Desc 1", DiscountPercent = 10, StartDate = DateTime.UtcNow.AddDays(-5), EndDate = DateTime.UtcNow.AddDays(5) },
-        //        new Promotion { Id = Guid.NewGuid(), Title = "Promo 2", Description = "Desc 2", DiscountPercent = 20, StartDate = DateTime.UtcNow.AddDays(-10), EndDate = DateTime.UtcNow.AddDays(10) }
-        //    };
+        private readonly PromotionQuery _promotionQuery;
 
-        //    var mockSet = promotions.BuildMockDbSet();
-        //    var mockContext = new Mock<FcgDbContext>();
-        //    mockContext.Setup(c => c.Promotions).Returns(mockSet.Object);
+        public PromotionQueryTests()
+        {
+            _promotionQuery = new PromotionQuery(_context);
+        }
 
-        //    var query = new PromotionQuery(mockContext.Object);
+        [Fact]
+        public async Task GetAllPromotionsAsync_ShouldReturnAllPromotions()
+        {
+            // Arrange
+            var promotionsData = EntityFakers.PromotionFaker.Generate(2);
+            _context.Promotions.AddRange(promotionsData.Select(p => new Tables.Promotion
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                DiscountPercent = p.DiscountPercent,
+                StartDate = p.StartDate,
+                EndDate = p.EndDate,
+                Genre = (int)p.Genre
+            }));
+            await _context.SaveChangesAsync();
 
-        //    // Act
-        //    var result = await query.GetAllPromotionsAsync();
+            // Act
+            var result = await _promotionQuery.GetAllPromotionsAsync();
 
-        //    // Assert
-        //    Assert.NotNull(result);
-        //    Assert.Equal(2, result.Count());
-        //    Assert.Contains(result, p => p.Title == "Promo 1");
-        //    Assert.Contains(result, p => p.Title == "Promo 2");
-        //}
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().HaveCount(2);
+            result.Should().Contain(p => p.Title == promotionsData[0].Title);
+            result.Should().Contain(p => p.Title == promotionsData[1].Title);
+        }
 
-        //[Fact]
-        //public async Task GetAllPromotionsAsync_ReturnsEmptyList_WhenNoPromotionsExist()
-        //{
-        //    // Arrange
-        //    var promotions = new List<Promotion>();
+        [Fact]
+        public async Task GetAllPromotionsAsync_ShouldReturnEmptyList_WhenNoPromotionsExist()
+        {
+            // Arrange
+            // No promotions in the database
 
-        //    var mockSet = promotions.BuildMockDbSet();
-        //    var mockContext = new Mock<FcgDbContext>();
-        //    mockContext.Setup(c => c.Promotions).Returns(mockSet.Object);
+            // Act
+            var result = await _promotionQuery.GetAllPromotionsAsync();
 
-        //    var query = new PromotionQuery(mockContext.Object);
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
+        }
 
-        //    // Act
-        //    var result = await query.GetAllPromotionsAsync();
+        [Fact]
+        public async Task GetByIdPromotionAsync_ShouldReturnPromotion_WhenPromotionExists()
+        {
+            // Arrange
+            var promotionData = EntityFakers.PromotionFaker.Generate();
+            _context.Promotions.Add(new Tables.Promotion
+            {
+                Id = promotionData.Id,
+                Title = promotionData.Title,
+                Description = promotionData.Description,
+                DiscountPercent = promotionData.DiscountPercent,
+                StartDate = promotionData.StartDate,
+                EndDate = promotionData.EndDate,
+                Genre  = (int)promotionData.Genre
+            });
+            await _context.SaveChangesAsync();
 
-        //    // Assert
-        //    Assert.NotNull(result);
-        //    Assert.Empty(result);
-        //}
+            // Act
+            var result = await _promotionQuery.GetByIdPromotionAsync(promotionData.Id);
 
-        //[Fact]
-        //public async Task GetByIdPromotionAsync_ReturnsPromotion_WhenPromotionExists()
-        //{
-        //    // Arrange
-        //    var promotionId = Guid.NewGuid();
-        //    var promotionTitle = "Test Promotion Title";
-        //    var existingPromotion = new Domain.Entities.Promotion(
-        //        promotionId,
-        //        promotionTitle,
-        //        "Description",
-        //        10m,
-        //        DateTime.UtcNow.AddDays(-10),
-        //        DateTime.UtcNow.AddDays(10)
-        //    );
+            // Assert
+            result.Should().NotBeNull();
+            result.Id.Should().Be(promotionData.Id);
+            result.Title.Should().Be(promotionData.Title);
+        }
 
-        //    // Crie um DbSet mockável
-        //    var promotions = new List<Tables.Promotion>
-        //    {
-        //        new Tables.Promotion // Entidade de infraestrutura/tabela
-        //        {
-        //            Id = existingPromotion.Id,
-        //            Title = existingPromotion.Title,
-        //            Description = existingPromotion.Description,
-        //            DiscountPercent = existingPromotion.DiscountPercent,
-        //            StartDate = existingPromotion.StartDate,
-        //            EndDate = existingPromotion.EndDate
-        //        }
-        //    }.AsQueryable();
+        [Fact]
+        public async Task GetByIdPromotionAsync_ShouldReturnNull_WhenPromotionDoesNotExist()
+        {
+            // Arrange
+            var nonExistentId = Guid.NewGuid();
 
-        //    var mockSet = new Mock<DbSet<Tables.Promotion>>();
-        //    mockSet.As<IQueryable<Tables.Promotion>>().Setup(m => m.Provider).Returns(promotions.Provider);
-        //    mockSet.As<IQueryable<Tables.Promotion>>().Setup(m => m.Expression).Returns(promotions.Expression);
-        //    mockSet.As<IQueryable<Tables.Promotion>>().Setup(m => m.ElementType).Returns(promotions.ElementType);
-        //    mockSet.As<IQueryable<Tables.Promotion>>().Setup(m => m.GetEnumerator()).Returns(promotions.GetEnumerator());
+            // Act
+            var result = await _promotionQuery.GetByIdPromotionAsync(nonExistentId);
 
-        //    // Mock do FcgDbContext, configurando a propriedade Promotions para retornar o DbSet mockado
-        //    var mockContext = new Mock<FcgDbContext>();
-        //    mockContext.Setup(c => c.Promotions).Returns(mockSet.Object);
-
-        //    // Instancie o repositório com o DbContext mockado
-        //    var repository = new PromotionRepository(mockContext.Object);
-
-        //    // Act
-        //    var result = await repository.GetPromotionByTitleAsync(promotionTitle); // Ajuste o método de busca conforme sua necessidade
-
-        //    // Assert
-        //    result.Should().NotBeNull();
-        //    result.Id.Should().Be(promotionId);
-        //    result.Title.Should().Be(promotionTitle);
-        //    mockContext.Verify(m => m.Promotions, Times.Once()); // Opcional: verifica que a propriedade foi acessada
-        //}
-
-
-        //[Fact]
-        //public async Task GetByIdPromotionAsync_ReturnsNull_WhenPromotionDoesNotExist()
-        //{
-        //    // Arrange
-        //    var promotions = new List<Promotion>
-        //    {
-        //        new Promotion { Id = Guid.NewGuid(), Title = "Promo 1", Description = "Desc 1", DiscountPercent = 10, StartDate = DateTime.UtcNow.AddDays(-5), EndDate = DateTime.UtcNow.AddDays(5) }
-        //    };
-        //    var nonExistentPromotionId = Guid.NewGuid();
-
-        //    var mockSet = promotions.BuildMockDbSet();
-        //    var mockContext = new Mock<FcgDbContext>();
-        //    mockContext.Setup(c => c.Promotions).Returns(mockSet.Object);
-
-        //    var query = new PromotionQuery(mockContext.Object);
-
-        //    // Act
-        //    var result = await query.GetByIdPromotionAsync(nonExistentPromotionId);
-
-        //    // Assert
-        //    Assert.Null(result);
-        //}
+            // Assert
+            result.Should().BeNull();
+        }
     }
 }

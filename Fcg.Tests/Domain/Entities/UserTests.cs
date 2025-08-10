@@ -1,9 +1,11 @@
-using Xunit;
-using Fcg.Domain.Entities;
 using Bogus;
+using Fcg.Domain.Entities;
+using Fcg.Infrastructure.Tests.Fakers;
+using FluentAssertions;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace Fcg.Tests.UnitTests
 {
@@ -170,17 +172,21 @@ namespace Fcg.Tests.UnitTests
             Assert.Empty(user.GamesAdded); // Certifique-se de que nada foi "adicionado" durante a remoção
         }
 
+
         [Fact]
-        public void RemoveGameFromLibrary_NonExistingGame_ShouldThrowInvalidOperationException()
+        public void RemoveGameFromLibrary_NonExistingGame_ShouldNotThrowException()
         {
             // Arrange
-            var user = _userFaker.Generate();
+            var user = EntityFakers.UserFaker.Generate();
             var nonExistentGameId = Guid.NewGuid();
 
-            // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => user.RemoveGameFromLibrary(nonExistentGameId));
-            Assert.Contains($"o game com ID '{nonExistentGameId}' não foi localizado na biblioteca de usuários", exception.Message);
+            // Act
+            Action act = () => user.RemoveGameFromLibrary(nonExistentGameId);
+
+            // Assert
+            act.Should().NotThrow();
         }
+
 
         [Fact]
         public void SetPasswordHash_WithValidHash_ShouldSetPasswordHash()

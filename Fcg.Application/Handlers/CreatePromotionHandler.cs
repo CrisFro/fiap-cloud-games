@@ -35,17 +35,6 @@ namespace Fcg.Application.Handlers
                     };
                 }
 
-                var existingPromotion = await _promotionRepository.GetPromotionByTitleAsync(title!);
-                if (existingPromotion != null)
-                {
-                    _logger.LogWarning("Tentativa de criar promoção já existente: {Title}", title);
-                    return new CreatePromotionResponse
-                    {
-                        Success = false,
-                        Message = "Promoção de jogo já existente"
-                    };
-                }
-
                 var promotion = new Promotion(
                     title!,
                     description!,
@@ -55,7 +44,7 @@ namespace Fcg.Application.Handlers
                     request.Genre
                 );
 
-                await _promotionRepository.CreatePromotionAsync(promotion);
+                await _promotionRepository.UpdateAsync(promotion);
 
                 _logger.LogInformation(
                     "Promoção criada com sucesso: {Title}, ID: {Id}, Gênero: {Genre}",

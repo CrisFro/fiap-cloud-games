@@ -23,9 +23,9 @@ namespace Fcg.Application.Handlers
 
         public async Task<CreateUserResponse> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByEmailAsync(request.Email);
+            var userEntity = await _userRepository.GetUserByEmailAsync(request.Email);
 
-            if (user != null)
+            if (userEntity != null)
             {
                 _logger.LogWarning($"Tentativa de criar usuário com e-mail já existente: {request.Email}");
 
@@ -36,7 +36,7 @@ namespace Fcg.Application.Handlers
                 };
             }
 
-            user = new User(request.Name, request.Email);
+            var user = new User(request.Name, request.Email);
             user.SetPasswordHash(_passwordHasherService.Hash(request.Password));
 
             await _userRepository.CreateUserAsync(user);
