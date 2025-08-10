@@ -14,8 +14,8 @@ namespace Fcg.Application.Requests
     {
         public BuyGameRequestValidator()
         {
-            //RuleFor(x => x.UserId).NotEmpty().WithMessage("Usuário é obrigatório!");
-            //RuleFor(x => x.GamesIds).NotNull().WithMessage("A lista de jogos não pode ser vazia!");
+            RuleFor(x => x.UserId).NotEmpty().WithMessage("Usuário é obrigatório!");
+            RuleFor(x => x.GamesIds).NotNull().WithMessage("A lista de jogos não pode ser vazia!");
         }
     }
 }

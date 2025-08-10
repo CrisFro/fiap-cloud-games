@@ -8,6 +8,7 @@ using Fcg.Domain.Services;
 using Fcg.Infrastructure.Data;
 using Fcg.Infrastructure.Queries;
 using Fcg.Infrastructure.Repositories;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -98,6 +99,8 @@ builder.Services.AddScoped<IPromotionQuery, PromotionQuery>();
 #region Domain Services
 builder.Services.AddScoped<IPasswordHasherService, PasswordHasherService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services
+    .AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
 #endregion
 
 #endregion
@@ -108,8 +111,15 @@ var app = builder.Build();
 #region Minimal APIs
 
 #region User Endpoints
-app.MapPost("/api/users", async (CreateUserRequest request, IMediator _mediator) =>
+app.MapPost("/api/users", async (CreateUserRequest request, IValidator<CreateUserRequest> validator, IMediator _mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await _mediator.Send(request);
 
     return response is not null
@@ -131,8 +141,15 @@ app.MapGet("/api/users/{id}/games", async (Guid id, IUserQuery _userQuery) =>
     return user is not null ? Results.Ok(user) : Results.NotFound();
 }).RequireAuthorization().WithTags("Users");
 
-app.MapPut("/api/users/{id}/role", async (Guid id, UpdateRoleRequest request, IMediator _mediator) =>
+app.MapPut("/api/users/{id}/role", async (Guid id, UpdateRoleRequest request, IValidator<UpdateRoleRequest> validator, IMediator _mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await _mediator.Send(request);
 
     return response is not null
@@ -157,8 +174,15 @@ app.MapDelete("/api/users/{id}", async (Guid id, IUserRepository _userRepository
 #endregion
 
 #region Auth Endpoints
-app.MapPost("/api/login", async (LoginRequest request, IMediator mediator) =>
+app.MapPost("/api/login", async (LoginRequest request, IValidator<LoginRequest> validator, IMediator mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await mediator.Send(request);
 
     if (!response.Success)
@@ -204,8 +228,15 @@ app.MapGet("/api/games", async (IGameQuery _gameQuery) =>
     return games is not null ? Results.Ok(games) : Results.NotFound();
 }).RequireAuthorization().WithTags("Games");
 
-app.MapPost("/api/games", async (CreateGameRequest request, IMediator _mediator) =>
+app.MapPost("/api/games", async (CreateGameRequest request, IValidator<CreateGameRequest> validator, IMediator _mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await _mediator.Send(request);
 
     return response is not null
@@ -213,8 +244,15 @@ app.MapPost("/api/games", async (CreateGameRequest request, IMediator _mediator)
         : Results.BadRequest(response!.Message);
 }).RequireAuthorization("AdminPolicy").WithTags("Games");
 
-app.MapPost("/api/games/buy", async (BuyGameRequest request, IMediator _mediator) =>
+app.MapPost("/api/games/buy", async (BuyGameRequest request, IValidator<BuyGameRequest> validator, IMediator _mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await _mediator.Send(request);
 
     return response is not null
@@ -247,8 +285,15 @@ app.MapGet("/api/promotions", async (IPromotionQuery _promotionQuery) =>
     return games is not null ? Results.Ok(games) : Results.NotFound();
 }).RequireAuthorization("AdminPolicy").WithTags("Promotions");
 
-app.MapPost("/api/promotions", async (CreatePromotionRequest request, IMediator _mediator) =>
+app.MapPost("/api/promotions", async (CreatePromotionRequest request, IValidator<CreatePromotionRequest> validator,  IMediator _mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await _mediator.Send(request);
 
     return response is not null
