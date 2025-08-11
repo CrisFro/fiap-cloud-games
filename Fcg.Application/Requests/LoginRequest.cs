@@ -14,11 +14,11 @@ namespace Fcg.Application.Requests
     {
         public LoginRequestValidator()
         {
-            RuleFor(x => x.Email)
+            RuleFor(x => x.Email).NotNull()
                 .NotEmpty().WithMessage("O e-mail é obrigatório.")
                 .EmailAddress().WithMessage("Formato de e-mail inválido.");
 
-            RuleFor(x => x.Password)
+            RuleFor(x => x.Password).NotNull()
                 .NotEmpty().WithMessage("A senha é obrigatória.");
         }
     }
