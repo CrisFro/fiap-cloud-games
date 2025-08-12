@@ -10,7 +10,7 @@ using Xunit;
 namespace Fcg.Infrastructure.Tests.Application
 {
     [Trait("Application-service", "PurchaseGameService")]
-    public class PurchaseGameServiceTests : BaseRepositoryTests
+    public class PurchaseGameServiceTests : BaseRepositoryTests, IDisposable
     {
         private readonly IUserRepository _userRepository;
         private readonly IGameRepository _gameRepository;
@@ -21,6 +21,12 @@ namespace Fcg.Infrastructure.Tests.Application
             _userRepository = new UserRepository(_context);
             _gameRepository = new GameRepository(_context);
             _purchaseGameService = new PurchaseGameService(_userRepository, _gameRepository);
+        }
+
+        public void Dispose()
+        {
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
         }
 
         [Fact]

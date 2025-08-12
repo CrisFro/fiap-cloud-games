@@ -255,10 +255,16 @@ app.MapPost("/api/promotions", async (CreatePromotionRequest request, IMediator 
         : Results.BadRequest(new { Message = response?.Message ?? "Falha ao criar a promoção." });
 }).RequireAuthorization("AdminPolicy").WithTags("Promotions");
 
-app.MapDelete("/api/promotions/{id}", (Guid id, IPromotionRepository _promotionRepository) =>
+app.MapDelete("/api/promotions/{id}", async (Guid id, FcgDbContext context) =>
 {
-    // Since IPromotionRepository does not have DeletePromotionAsync, return NotFound to avoid runtime errors.
-    return Results.NotFound();
+    var promotion = await context.Promotions.FindAsync(id);
+    if (promotion is null)
+    {
+        return Results.NotFound();
+    }
+    context.Promotions.Remove(promotion);
+    await context.SaveChangesAsync();
+    return Results.NoContent();
 }).RequireAuthorization("AdminPolicy").WithTags("Promotions");
 #endregion
 

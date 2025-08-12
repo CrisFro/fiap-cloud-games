@@ -2,11 +2,11 @@ using Fcg.Api;
 using Fcg.Application.Requests;
 using Fcg.Tests;
 using Microsoft.AspNetCore.Mvc.Testing;
+using FluentAssertions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using TechTalk.SpecFlow;
-using Xunit;
 
 namespace Fcg.Tests.StepDefinitions
 {
@@ -46,7 +46,7 @@ namespace Fcg.Tests.StepDefinitions
             if (!creationResponse.IsSuccessStatusCode && creationResponse.StatusCode != HttpStatusCode.Conflict)
             {
                 var errorContent = await creationResponse.Content.ReadAsStringAsync();
-                Assert.Fail($"[GIVEN] Failed to ensure user exists. API returned {creationResponse.StatusCode}. Body: {errorContent}");
+                throw new InvalidOperationException($"[GIVEN] Failed to ensure user exists. API returned {creationResponse.StatusCode}. Body: {errorContent}");
             }
         }
 
@@ -61,46 +61,47 @@ namespace Fcg.Tests.StepDefinitions
         public void ThenTheAPIShouldRespondWithAnStatus(string expectedStatus)
         {
             // This step is reusable across different feature tests.
+            _response.Should().NotBeNull();
             var expectedStatusCode = Enum.Parse<HttpStatusCode>(expectedStatus, true);
-            Assert.Equal(expectedStatusCode, _response!.StatusCode);
+            _response.StatusCode.Should().Be(expectedStatusCode);
         }
 
         [Then(@"a resposta deve conter um token JWT válido")]
         public async Task ThenTheResponseShouldContainAValidJWTToken()
         {
-            Assert.NotNull(_response);
+            _response.Should().NotBeNull();
             LoginSuccessResponse? loginResponse = null;
             try
             {
                 loginResponse = await _response.Content.ReadFromJsonAsync<LoginSuccessResponse>();
             }
-            catch (System.Text.Json.JsonException ex)
+            catch (Exception ex)
             {
                 var body = await _response.Content.ReadAsStringAsync();
-                Assert.Fail($"Failed to deserialize successful login response. Status: {_response.StatusCode}. Body: '{body}'. Exception: {ex.Message}");
+                throw new InvalidOperationException($"Failed to deserialize successful login response. Status: {_response.StatusCode}. Body: '{body}'.", ex);
             }
 
-            Assert.NotNull(loginResponse);
-            Assert.False(string.IsNullOrWhiteSpace(loginResponse.Token));
+            loginResponse.Should().NotBeNull();
+            loginResponse.Token.Should().NotBeNullOrWhiteSpace();
         }
 
         [Then(@"a resposta da mensagem deve indicar credenciais inválidas")]
         public async Task ThenTheResponseMessageShouldIndicateInvalidCredentials()
         {
-            Assert.NotNull(_response);
+            _response.Should().NotBeNull();
             LoginErrorResponse? errorResponse = null;
             try
             {
                 errorResponse = await _response.Content.ReadFromJsonAsync<LoginErrorResponse>();
             }
-            catch (System.Text.Json.JsonException ex)
+            catch (Exception ex)
             {
                 var body = await _response.Content.ReadAsStringAsync();
-                Assert.Fail($"Failed to deserialize error login response. Status: {_response.StatusCode}. Body: '{body}'. Exception: {ex.Message}");
+                throw new InvalidOperationException($"Failed to deserialize error login response. Status: {_response.StatusCode}. Body: '{body}'.", ex);
             }
 
-            Assert.NotNull(errorResponse);
-            Assert.Equal("Usuário ou senha inválidos.", errorResponse.Message);
+            errorResponse.Should().NotBeNull();
+            errorResponse.Message.Should().Be("Usuário ou senha inválidos.");
         }
     }
 }

@@ -23,10 +23,10 @@ namespace Fcg.Infrastructure.Tests
         public void CreateAsync_ShouldThrowArgumentException_WhenCreatingGameWithNegativePrice()
         {
             // Arrange
-            Action act = () => EntityFakers.GameFaker.RuleFor(g => g.Price, -9.99m).Generate();
+            Action act = () => new Game("Test Game", "Test Description", GenreEnum.Acao, -9.99m);
 
             // Assert
-            act.Should().Throw<ArgumentException>();
+            act.Should().Throw<ArgumentOutOfRangeException>();
         }
 
 
