@@ -24,7 +24,7 @@ namespace Fcg.Application.Services
                 throw new InvalidOperationException("User not found.");
             }
 
-            var game = await _gameRepository.GetByIdAsync(gameId);
+            var game = await _gameRepository.GetGameByIdAsync(gameId);
             if (game == null)
             {
                 throw new InvalidOperationException("Game not found.");
@@ -32,7 +32,7 @@ namespace Fcg.Application.Services
 
             user.AddGameToLibrary(game);
 
-            await _userRepository.UpdateAsync(user);
+            await _userRepository.UpdateUserLibraryAsync(user);
         }
     }
 }

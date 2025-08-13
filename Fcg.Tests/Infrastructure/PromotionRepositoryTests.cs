@@ -19,14 +19,14 @@ namespace Fcg.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task UpdateAsync_ShouldFailSilently_WhenPromotionDoesNotExist()
+        public async Task UpdatePromotionAsync_ShouldFailSilently_WhenPromotionDoesNotExist()
         {
             // Arrange
             var nonExistentPromotion = EntityFakers.PromotionFaker.Generate();
 
             // Act
             // Supondo que exista um método UpdateAsync no repositório.
-            Func<Task> act = async () => await _promotionRepository.UpdateAsync(nonExistentPromotion);
+            Func<Task> act = async () => await _promotionRepository.UpdatePromotionAsync(nonExistentPromotion);
 
             // Assert
             await act.Should().NotThrowAsync();

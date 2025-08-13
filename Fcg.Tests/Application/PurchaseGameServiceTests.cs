@@ -37,7 +37,7 @@ namespace Fcg.Infrastructure.Tests.Application
             var game = EntityFakers.GameFaker.Generate();
 
             await _userRepository.CreateUserAsync(user);
-            await _gameRepository.CreateAsync(game);
+            await _gameRepository.CreateGameAsync(game);
 
             // Act
             await _purchaseGameService.ExecuteAsync(user.Id, game.Id);
@@ -56,7 +56,7 @@ namespace Fcg.Infrastructure.Tests.Application
             // Arrange
             var nonExistentUserId = Guid.NewGuid();
             var game = EntityFakers.GameFaker.Generate();
-            await _gameRepository.CreateAsync(game);
+            await _gameRepository.CreateGameAsync(game);
 
             // Act
             Func<Task> act = async () => await _purchaseGameService.ExecuteAsync(nonExistentUserId, game.Id);

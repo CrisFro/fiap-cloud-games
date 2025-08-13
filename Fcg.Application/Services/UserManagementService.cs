@@ -31,7 +31,7 @@ namespace Fcg.Application.Services
             targetUser.SetRole(newRole);
 
             // 2. Diga ao repositório para persistir a entidade atualizada
-            await _userRepository.UpdateAsync(targetUser);
+            await _userRepository.UpdateUserRoleAsync(targetUser.Id, newRole);
         }
     }
 }

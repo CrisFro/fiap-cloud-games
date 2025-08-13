@@ -1,10 +1,13 @@
 ﻿using Fcg.Domain.Entities;
-using System.Threading.Tasks;
 
 namespace Fcg.Domain.Repositories
 {
     public interface IPromotionRepository
     {
-        Task UpdateAsync(Promotion promotion);
+        Task<Guid> CreatePromotionAsync(Promotion promotion);
+        Task<Promotion?> GetPromotionByTitleAsync(string title);
+        Task<IEnumerable<Promotion>> GetValidPromotionsAsync();
+        Task UpdatePromotionAsync(Promotion promotion);
+        Task<bool> DeletePromotionAsync(Guid id);
     }
 }

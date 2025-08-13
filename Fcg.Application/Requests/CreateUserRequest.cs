@@ -16,10 +16,10 @@ namespace Fcg.Application.Requests
     {
         public CreateUserRequestValidator()
         {
-            RuleFor(p => p.Name).MinimumLength(3)
+            RuleFor(p => p.Name).NotNull().MinimumLength(3)
                 .WithMessage("O nome deve ter pelo menos 3 caracteres.");
-            RuleFor(p => p.Email).EmailAddress().WithMessage("Formato de e-mail inválido.");
-            RuleFor(p => p.Password)
+            RuleFor(p => p.Email).NotNull().EmailAddress().WithMessage("Formato de e-mail inválido.");
+            RuleFor(p => p.Password).NotEmpty().NotNull()
             .Must(BeAStrongPassword)
             .WithMessage("A senha não é forte o suficiente. Ela deve ter no mínimo 8 caracteres, incluindo letras maiúsculas, minúsculas, números e um símbolo.");
         }

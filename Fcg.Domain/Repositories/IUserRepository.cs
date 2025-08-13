@@ -1,6 +1,4 @@
 ﻿using Fcg.Domain.Entities;
-using System;
-using System.Threading.Tasks;
 
 namespace Fcg.Domain.Repositories
 {
@@ -9,7 +7,9 @@ namespace Fcg.Domain.Repositories
         Task<Guid> CreateUserAsync(User user);
         Task<User?> GetUserByEmailAsync(string email);
         Task<User?> GetUserByIdAsync(Guid id);
-        Task UpdateAsync(User user);
+        Task UpdateUserProfileAsync(User user);
+        Task UpdateUserRoleAsync(Guid userId, string newRole);
+        Task UpdateUserLibraryAsync(User user);
         Task<bool> DeleteUserAsync(Guid userId);
     }
 }

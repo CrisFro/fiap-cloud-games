@@ -71,7 +71,7 @@ namespace Fcg.Application.Handlers
                 };
             }
 
-            var promotions = new List<Promotion>(); // TODO: Retrieve valid promotions using available methods in IPromotionRepository
+            var promotions = (await _promotionRepository.GetValidPromotionsAsync()).ToList();
 
             decimal totalWithDiscount = 0m;
             var items = new List<BuyGameItemBreakdown>();
@@ -109,7 +109,7 @@ namespace Fcg.Application.Handlers
                 user.AddGameToLibrary(game);
             }
 
-            await _userRepository.UpdateAsync(user);
+            await _userRepository.UpdateUserLibraryAsync(user);
 
             return new BuyGameResponse
             {

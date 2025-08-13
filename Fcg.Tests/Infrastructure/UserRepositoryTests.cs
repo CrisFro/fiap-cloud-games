@@ -39,7 +39,7 @@ namespace Fcg.Tests.Infrastructure
             user.SetRole(newRole);
 
             // 2. The repository persists the changes to the entity.
-            await _userRepository.UpdateAsync(user);
+            await _userRepository.UpdateUserRoleAsync(user.Id, user.Role);
 
             // Assert
             // 3. Verify by fetching the data directly from the context to ensure it was saved.

@@ -8,6 +8,7 @@ using Fcg.Domain.Services;
 using Fcg.Infrastructure.Data;
 using Fcg.Infrastructure.Queries;
 using Fcg.Infrastructure.Repositories;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
@@ -99,6 +100,8 @@ builder.Services.AddScoped<IPromotionQuery, PromotionQuery>();
 #region Domain Services
 builder.Services.AddScoped<IPasswordHasherService, PasswordHasherService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services
+    .AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
 #endregion
 
 #endregion
@@ -109,13 +112,20 @@ var app = builder.Build();
 #region Minimal APIs
 
 #region User Endpoints
-app.MapPost("/api/users", async (CreateUserRequest request, IMediator _mediator) =>
+app.MapPost("/api/users", async (CreateUserRequest request, IValidator<CreateUserRequest> validator, IMediator _mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await _mediator.Send(request);
 
-    return response?.Success == true
+    return response is not null
         ? Results.Created($"/api/users/{response.UserId}", response)
-        : Results.BadRequest((object?)response ?? new { Success = false, Message = "Falha ao processar a requisição para criar usuário." });
+        : Results.BadRequest(response!.Message);
 }).AllowAnonymous().WithTags("Users");
 
 app.MapGet("/api/users/{id}", async (Guid id, IUserQuery _userQuery) =>
@@ -132,13 +142,20 @@ app.MapGet("/api/users/{id}/games", async (Guid id, IUserQuery _userQuery) =>
     return user is not null ? Results.Ok(user) : Results.NotFound();
 }).RequireAuthorization().WithTags("Users");
 
-app.MapPut("/api/users/{id}/role", async (Guid id, UpdateRoleRequest request, IMediator _mediator) =>
+app.MapPut("/api/users/{id}/role", async (Guid id, UpdateRoleRequest request, IValidator<UpdateRoleRequest> validator, IMediator _mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await _mediator.Send(request);
 
-    return response?.Success == true
+    return response is not null
         ? Results.Created($"/api/users/{response.UserId}", response)
-        : Results.BadRequest(new { Message = response?.Message ?? "Falha ao atualizar a role do usuário." });
+        : Results.BadRequest(response!.Message);
 }).RequireAuthorization("AdminPolicy").WithTags("Users");
 
 app.MapGet("/api/users", async (IUserQuery _userQuery) =>
@@ -158,12 +175,19 @@ app.MapDelete("/api/users/{id}", async (Guid id, IUserRepository _userRepository
 #endregion
 
 #region Auth Endpoints
-app.MapPost("/api/login", async (LoginRequest request, IMediator mediator) =>
+app.MapPost("/api/login", async (LoginRequest request, IValidator<LoginRequest> validator, IMediator mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await mediator.Send(request);
 
-    if (response?.Success != true)
-        return Results.Json(new { Message = response?.Message ?? "Usuário ou senha inválidos." }, statusCode: StatusCodes.Status401Unauthorized);
+    if (!response.Success)
+        return Results.Json(new { response.Message }, statusCode: StatusCodes.Status401Unauthorized);
 
     return Results.Ok(new
     {
@@ -205,29 +229,45 @@ app.MapGet("/api/games", async (IGameQuery _gameQuery) =>
     return games is not null ? Results.Ok(games) : Results.NotFound();
 }).RequireAuthorization().WithTags("Games");
 
-app.MapPost("/api/games", async (CreateGameRequest request, IMediator _mediator) =>
+app.MapPost("/api/games", async (CreateGameRequest request, IValidator<CreateGameRequest> validator, IMediator _mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await _mediator.Send(request);
 
-    return response?.Success == true
+    return response is not null
         ? Results.Created($"/api/games/{response.GameId}", response)
-        : Results.BadRequest(new { Message = response?.Message ?? "Falha ao criar o jogo." });
+        : Results.BadRequest(response!.Message);
 }).RequireAuthorization("AdminPolicy").WithTags("Games");
 
-app.MapPost("/api/games/buy", async (BuyGameRequest request, IMediator _mediator) =>
+app.MapPost("/api/games/buy", async (BuyGameRequest request, IValidator<BuyGameRequest> validator, IMediator _mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await _mediator.Send(request);
 
-    return response?.Success == true
+    return response is not null
         ? Results.Created($"/api/users/{response.UserId}/games", response)
-        : Results.BadRequest(new { Message = response?.Message ?? "Falha ao comprar o jogo." });
+        : Results.BadRequest(response!.Message);
 }).RequireAuthorization().WithTags("Games");
 
-app.MapDelete("/api/games/{id}", (Guid id, IGameRepository _gameRepository) =>
+app.MapDelete("/api/games/{id}", async (Guid id, IGameRepository _gameRepository) =>
 {
-    // Since IGameRepository does not have DeleteGameAsync, you need to implement it or remove this endpoint.
-    // For now, return NotFound to avoid runtime errors.
-    return Results.NotFound();
+    var deleted = await _gameRepository.DeleteGameAsync(id);
+
+    return deleted
+        ? Results.NoContent()
+        : Results.NotFound();
 }).RequireAuthorization("AdminPolicy").WithTags("Games");
 #endregion
 
@@ -246,25 +286,29 @@ app.MapGet("/api/promotions", async (IPromotionQuery _promotionQuery) =>
     return games is not null ? Results.Ok(games) : Results.NotFound();
 }).RequireAuthorization("AdminPolicy").WithTags("Promotions");
 
-app.MapPost("/api/promotions", async (CreatePromotionRequest request, IMediator _mediator) =>
+app.MapPost("/api/promotions", async (CreatePromotionRequest request, IValidator<CreatePromotionRequest> validator,  IMediator _mediator) =>
 {
+    var validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(validationResult.Errors
+            .Select(e => new { e.PropertyName, e.ErrorMessage }));
+    }
+
     var response = await _mediator.Send(request);
 
-    return response?.Success == true
+    return response is not null
         ? Results.Created($"/api/promotions/{response.PromotionId}", response)
-        : Results.BadRequest(new { Message = response?.Message ?? "Falha ao criar a promoção." });
+        : Results.BadRequest(response!.Message);
 }).RequireAuthorization("AdminPolicy").WithTags("Promotions");
 
-app.MapDelete("/api/promotions/{id}", async (Guid id, FcgDbContext context) =>
+app.MapDelete("/api/promotions/{id}", async (Guid id, IPromotionRepository _promotionRepository) =>
 {
-    var promotion = await context.Promotions.FindAsync(id);
-    if (promotion is null)
-    {
-        return Results.NotFound();
-    }
-    context.Promotions.Remove(promotion);
-    await context.SaveChangesAsync();
-    return Results.NoContent();
+    var deleted = await _promotionRepository.DeletePromotionAsync(id);
+
+    return deleted
+        ? Results.NoContent()
+        : Results.NotFound();
 }).RequireAuthorization("AdminPolicy").WithTags("Promotions");
 #endregion
 

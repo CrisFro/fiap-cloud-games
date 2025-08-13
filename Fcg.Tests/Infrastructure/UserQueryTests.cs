@@ -111,7 +111,7 @@ namespace Fcg.Infrastructure.Tests
             updatedUser.UpdateProfile(newName, newEmail);
 
             // Act
-            await _userRepository.UpdateAsync(updatedUser);
+            await _userRepository.UpdateUserProfileAsync(updatedUser);
 
             // Assert
             var savedUser = await _userRepository.GetUserByIdAsync(user.Id);

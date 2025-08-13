@@ -1,35 +1,55 @@
-# FIAP Cloud Games - API
+# 🎮 FIAP Cloud Games - Tech Challenge Fase 1
 
-Projeto desenvolvido como parte do **Tech Challenge** da FIAP.  
-Essa API permite o cadastro e autenticação de usuários, bem como a futura gestão de jogos adquiridos por cada um.
+Este projeto é a entrega da Fase 1 do Tech Challenge da FIAP. A proposta é desenvolver uma API REST em .NET 8 para cadastro de usuários e biblioteca de jogos adquiridos, com foco em boas práticas, qualidade de software e estrutura para expansão futura.
 
-## Tecnologias Utilizadas
+## 📌 Funcionalidades Implementadas
 
-- ASP.NET Core 8 (Web API)
+- ✅ Cadastro de usuários com validação de e-mail e senha forte
+- ✅ Autenticação via JWT com controle de acesso por **roles** (Usuário / Administrador)
+- ✅ Cadastro e listagem de jogos
+- ✅ Associação de jogos à biblioteca do usuário
+- ✅ Cadastro de promoções
+- ✅ Middleware de tratamento de erros e logs estruturados
+- ✅ Documentação da API com Swagger
+- ✅ Testes unitários com xUnit e aplicação de TDD/BDD
+
+---
+
+## 🧠 Tecnologias Utilizadas
+
+- .NET 8
 - Entity Framework Core
-- DDD (Domain-Driven Design)
-- JWT (em breve)
-- Swagger para documentação
 - SQL Server
+- Swagger
+- JWT (JSON Web Token)
+- xUnit + Moq
+- BDDfy (para testes comportamentais)
+- FluentValidation
+- Clean Architecture + DDD
 
-## Estrutura de Pastas
+---
 
-- `Fcg.Api` - Camada de apresentação (Controllers, Program.cs)
-- `Fcg.Application` - Camada de aplicação (DTOs, Interfaces, Serviços)
-- `Fcg.Domain` - Camada de domínio (Entidades)
-- `Fcg.Infrastructure` - Camada de infraestrutura (DbContext, Repositórios)
+## 🔐 Perfis de Acesso
 
-## Funcionalidades atuais
+- **Usuário Comum**: pode se autenticar e visualizar sua biblioteca de jogos.
+- **Administrador**: pode criar jogos, promoções e gerenciar usuários.
 
-- Registro de usuário com:
-  - Nome 
-  - E-mail válido
-  - Senha
-- Validações básicas com `DataAnnotations`
-- Swagger configurado
+---
 
-## Como rodar
+## 🧪 Testes e Qualidade
 
-1. Clonar o repositório:
-   ```bash
-   git clone https://github.com/CrisFro/fiap-cloud-games.git
+- TDD aplicado ao módulo de autenticação (`AuthService`)
+- BDD aplicado ao fluxo de cadastro de usuário com `BDDfy`
+- Testes unitários com xUnit e mocks com Moq
+
+---
+
+## 🗂 Estrutura do Projeto
+
+```plaintext
+src/
+├── FiapCloudGames.API            # Camada de apresentação (API Controllers, Middleware)
+├── FiapCloudGames.Application   # DTOs, Services, Interfaces
+├── FiapCloudGames.Domain        # Entidades, Enums, Interfaces de domínio
+├── FiapCloudGames.Infrastructure# Repositórios, contexto EF Core, JWT service
+├── FiapCloudGames.Tests         # Testes unitários (TDD/BDD)
