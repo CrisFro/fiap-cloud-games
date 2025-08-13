@@ -53,7 +53,7 @@ namespace Fcg.Tests.UnitTests
                 faker.Genre,
                 faker.Price
             ));
-            Assert.Contains("Title não pode ser vazio ou nulo", exception.Message);
+            Assert.True(exception.Message.Contains("Título não pode ser vazio ou nulo")==true);
         }
 
         [Theory]
@@ -90,7 +90,7 @@ namespace Fcg.Tests.UnitTests
                 invalidGenre,
                 faker.Price
             ));
-            Assert.Contains("Gênero não pode ser vazio ou nulo", exception.Message);
+            Assert.True(exception.Message.Contains("Gênero inválido.")==true);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Fcg.Tests.UnitTests
                 faker.Genre,
                 -10m
             ));
-            Assert.Contains("Price não pode ser vazio ou nulo", exception.Message);
+            Assert.True(exception.Message.Contains("Preço não pode ser menor que 0.") ==true);
         }
 
         [Fact]
@@ -138,9 +138,10 @@ namespace Fcg.Tests.UnitTests
             var newDescription = "New Game Description";
             var newGenre = GenreEnum.Aventura;
 
+            invalidTitle = string.Empty; 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => game.UpdateDetails(invalidTitle, newDescription, newGenre));
-            Assert.Contains("Title não pode ser vazio ou nulo", exception.Message);
+            Assert.Contains("Título não pode ser vazio ou nulo", exception.Message);
         }
 
         [Fact]

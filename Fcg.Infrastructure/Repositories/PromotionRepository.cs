@@ -70,6 +70,23 @@ namespace Fcg.Infrastructure.Repositories
             return promotions;
         }
 
+        public async Task UpdatePromotionAsync(Promotion promotion)
+        {
+            var promotionEntity = await _context.Promotions.FindAsync(promotion.Id);
+
+            if (promotionEntity != null)
+            {
+                promotionEntity.Title = promotion.Title;
+                promotionEntity.Description = promotion.Description;
+                promotionEntity.DiscountPercent = promotion.DiscountPercent;
+                promotionEntity.StartDate = promotion.StartDate;
+                promotionEntity.EndDate = promotion.EndDate;
+                promotionEntity.Genre = (int)promotion.Genre;
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task<bool> DeletePromotionAsync(Guid promotionId)
         {
             var promotion = await _context.Promotions.FindAsync(promotionId);

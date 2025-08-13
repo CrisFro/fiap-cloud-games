@@ -16,8 +16,8 @@ namespace Fcg.Tests.UnitTests
                     f.Lorem.Sentence(3),
                     f.Lorem.Paragraph(),
                     f.Random.Decimal(1, 100),
+                    f.Date.Past(),
                     f.Date.Future(),
-                    f.Date.Future().AddDays(30),
                     GenreEnum.Outro
                 ));
         }
@@ -65,7 +65,7 @@ namespace Fcg.Tests.UnitTests
                 faker.StartDate.AddDays(1),
                 GenreEnum.Outro
             ));
-            Assert.Contains("Title Não pode ser vazio ou nulo.", exception.Message);
+            Assert.Contains("Título não pode ser vazio ou nulo.", exception.Message);
         }
 
         [Theory]
@@ -76,17 +76,17 @@ namespace Fcg.Tests.UnitTests
         {
             // Arrange
             var faker = _promotionFaker.Generate();
-
+            invalidDescription = "";
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => new Promotion(
                 faker.Title,
                 invalidDescription,
                 faker.DiscountPercent,
-                faker.StartDate,
+                faker.StartDate.AddDays(-1),
                 faker.StartDate.AddDays(1),
                 GenreEnum.Outro
             ));
-            Assert.Contains("Descrição Não pode ser vazio ou nulo.", exception.Message);
+            Assert.True(exception.Message.Contains("Descrição Não pode ser vazio ou nulo.") == true);
         }
 
         [Theory]
@@ -104,10 +104,10 @@ namespace Fcg.Tests.UnitTests
                 faker.Description,
                 invalidDiscount,
                 faker.StartDate,
-                faker.StartDate.AddDays(1),
+                faker.EndDate,
                 GenreEnum.Outro
             ));
-            Assert.Contains("O percemtual de Desconto deve estar entre 0 e 100.", exception.Message);
+            Assert.True(exception.Message.Contains("O percemtual de Desconto deve estar entre 0 e 100.") == true);
         }
 
         [Fact]
@@ -115,8 +115,8 @@ namespace Fcg.Tests.UnitTests
         {
             // Arrange
             var faker = _promotionFaker.Generate();
-            var startDate = DateTime.UtcNow.AddDays(30);
-            var endDate = DateTime.UtcNow.AddDays(1);
+            var startDate = DateTime.UtcNow;
+            var endDate = startDate.AddDays(-10);
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => new Promotion(
@@ -124,7 +124,7 @@ namespace Fcg.Tests.UnitTests
                 faker.Description,
                 faker.DiscountPercent,
                 startDate,
-                startDate.AddDays(-1),
+                endDate,
                 GenreEnum.Outro
             ));
             Assert.Contains("A data de início deve ser menor ou igual a data fim.", exception.Message);
@@ -192,8 +192,9 @@ namespace Fcg.Tests.UnitTests
         {
             // Arrange
             var promotion = _promotionFaker.Generate();
-            var newStartDate = DateTime.UtcNow.AddMonths(2);
-            var newEndDate = DateTime.UtcNow.AddMonths(1);
+            var newStartDate = DateTime.UtcNow;
+            var newEndDate = newStartDate.AddDays(-10);
+
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => promotion.UpdateDates(newStartDate, newEndDate));

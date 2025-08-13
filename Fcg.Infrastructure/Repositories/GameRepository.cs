@@ -64,6 +64,22 @@ namespace Fcg.Infrastructure.Repositories
 
             return games;
         }
+
+        public async Task<Game?> GetGameByIdAsync(Guid gameId)
+        {
+            var game = await (from g in _context.Games
+                              where g.Id == gameId
+                              select new Game(
+                                  g.Id,
+                                  g.Title,
+                                  g.Description,
+                                  (GenreEnum)g.Genre,
+                                  g.Price,
+                                  g.CreatedAt))
+                              .FirstOrDefaultAsync();
+
+            return game;
+        }
         public async Task<bool> DeleteGameAsync(Guid gameId)
         {
             await using var tx = await _context.Database.BeginTransactionAsync();

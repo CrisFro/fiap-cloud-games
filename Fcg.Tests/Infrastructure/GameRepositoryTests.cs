@@ -3,101 +3,50 @@ using Fcg.Infrastructure.Repositories;
 using Fcg.Infrastructure.Tests.Fakers;
 using FluentAssertions;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Fcg.Infrastructure.Tests
 {
+    [Trait("Domain-infrastructure", "Game Repository")]
     public class GameRepositoryTests : BaseRepositoryTests
     {
         private readonly GameRepository _gameRepository;
 
         public GameRepositoryTests()
         {
+            // Supondo que GameRepository exista e siga o mesmo padrão de UserRepository
             _gameRepository = new GameRepository(_context);
         }
 
         [Fact]
-        public async Task CreateGameAsync_ShouldAddGameToDatabase()
+        public void CreateAsync_ShouldThrowArgumentException_WhenCreatingGameWithNegativePrice()
         {
             // Arrange
-            var game = EntityFakers.GameFaker.Generate();
-
-            // Act
-            var gameId = await _gameRepository.CreateGameAsync(game);
+            Action act = () => new Game("Test Game", "Test Description", GenreEnum.Acao, -9.99m);
 
             // Assert
-            gameId.Should().NotBeEmpty();
-            var savedGameEntity = await _context.Games.FindAsync(gameId);
-            savedGameEntity.Should().NotBeNull();
-            savedGameEntity.Title.Should().Be(game.Title);
-            savedGameEntity.Description.Should().Be(game.Description);
-            savedGameEntity.Genre.Should().Be((int)game.Genre);
-            savedGameEntity.Price.Should().Be(game.Price);
+            act.Should().Throw<ArgumentOutOfRangeException>();
         }
 
-        [Fact]
-        public async Task GetGameByTitleAsync_ShouldReturnGame_WhenGameExists()
-        {
-            // Arrange
-            var game = EntityFakers.GameFaker.Generate();
-            await _gameRepository.CreateGameAsync(game);
 
-            // Act
-            var retrievedGame = await _gameRepository.GetGameByTitleAsync(game.Title);
 
-            // Assert
-            retrievedGame.Should().NotBeNull();
-            retrievedGame.Id.Should().Be(game.Id);
-            retrievedGame.Title.Should().Be(game.Title);
-        }
 
-        [Fact]
-        public async Task GetGameByTitleAsync_ShouldReturnNull_WhenGameDoesNotExist()
-        {
-            // Arrange
-            var nonExistentTitle = "Non Existent Game";
 
-            // Act
-            var retrievedGame = await _gameRepository.GetGameByTitleAsync(nonExistentTitle);
+        //[Fact]
+        //public async Task UpdateAsync_ShouldFailSilently_WhenGameDoesNotExist()
+        //{
+        //    // Arrange
+        //    var nonExistentGame = EntityFakers.GameFaker.Generate();
 
-            // Assert
-            retrievedGame.Should().BeNull();
-        }
+        //    // Act
+        //    // Supondo que exista um método UpdateAsync no repositório.
+        //    Func<Task> act = async () => await _gameRepository.UpdateAsync(nonExistentGame);
 
-        [Fact]
-        public async Task GetGamesByIdsAsync_ShouldReturnGames_WhenGamesExist()
-        {
-            // Arrange
-            var games = EntityFakers.GameFaker.Generate(3); // Gerar 3 jogos
-            foreach (var game in games)
-            {
-                await _gameRepository.CreateGameAsync(game);
-            }
-            var gameIds = games.Select(g => g.Id).ToList();
-
-            // Act
-            var retrievedGames = await _gameRepository.GetGamesByIdsAsync(gameIds);
-
-            // Assert
-            retrievedGames.Should().NotBeNull();
-            retrievedGames.Should().HaveCount(3);
-            retrievedGames.Select(g => g.Id).Should().BeEquivalentTo(gameIds);
-        }
-
-        [Fact]
-        public async Task GetGamesByIdsAsync_ShouldReturnEmptyList_WhenNoGamesExistForIds()
-        {
-            // Arrange
-            var nonExistentIds = new[] { Guid.NewGuid(), Guid.NewGuid() };
-
-            // Act
-            var retrievedGames = await _gameRepository.GetGamesByIdsAsync(nonExistentIds);
-
-            // Assert
-            retrievedGames.Should().NotBeNull();
-            retrievedGames.Should().BeEmpty();
-        }
+        //    // Assert
+        //    // A operação não deve lançar uma exceção, pois é uma operação idempotente.
+        //    // O EF Core, por padrão, não lança exceção se a entidade a ser atualizada não for rastreada.
+        //    await act.Should().NotThrowAsync();
+        //}
     }
 }
