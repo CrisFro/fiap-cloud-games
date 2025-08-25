@@ -53,7 +53,7 @@ namespace Fcg.Tests.UnitTests
                 faker.Genre,
                 faker.Price
             ));
-            Assert.True(exception.Message.Contains("Título não pode ser vazio ou nulo")==true);
+            Assert.True(exception.Message.Contains("Titulo nao pode ser vazio ou nulo")==true);
         }
 
         [Theory]
@@ -72,7 +72,7 @@ namespace Fcg.Tests.UnitTests
                 faker.Genre,
                 faker.Price
             ));
-            Assert.Contains("Descrição não pode ser vazio ou nulo", exception.Message);
+            Assert.Contains("Descricao nao pode ser vazio ou nulo", exception.Message);
         }
 
         [Theory]
@@ -90,7 +90,7 @@ namespace Fcg.Tests.UnitTests
                 invalidGenre,
                 faker.Price
             ));
-            Assert.True(exception.Message.Contains("Gênero inválido.")==true);
+            Assert.True(exception.Message.Contains("Genero invalido.")==true);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Fcg.Tests.UnitTests
                 faker.Genre,
                 -10m
             ));
-            Assert.True(exception.Message.Contains("Preço não pode ser menor que 0.") ==true);
+            Assert.True(exception.Message.Contains("Preco nao pode ser menor que 0.") ==true);
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace Fcg.Tests.UnitTests
             invalidTitle = string.Empty; 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => game.UpdateDetails(invalidTitle, newDescription, newGenre));
-            Assert.Contains("Título não pode ser vazio ou nulo", exception.Message);
+            Assert.Contains("Titulo nao pode ser vazio ou nulo", exception.Message);
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace Fcg.Tests.UnitTests
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => game.ChangePrice(-5.0m));
-            Assert.Contains("Preço não pode ser negativo.", exception.Message);
+            Assert.Contains("Preco nao pode ser negativo.", exception.Message);
         }
     }
 }
