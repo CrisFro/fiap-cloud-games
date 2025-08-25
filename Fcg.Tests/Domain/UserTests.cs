@@ -111,7 +111,7 @@ namespace Fcg.Tests.Domain
             // Arrange
             var user = EntityFakers.UserFaker.Generate();
             var originalRole = user.Role;
-            var newRole = "Admin";
+            var newRole = originalRole == "Admin" ? "User" : "Admin"; // Garante que será diferente
 
             // Act
             user.SetRole(newRole);
