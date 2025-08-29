@@ -20,9 +20,9 @@
         public UserGaming(Guid id, User user, Game game, DateTime purchasedDate)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException("Id não pode ser vazio.", nameof(id));
-            User = user ?? throw new ArgumentNullException(nameof(user), "User não pode ser vazio.");
-            Game = game ?? throw new ArgumentNullException(nameof(game), "Game não pode ser vazio");
+                throw new ArgumentException("Id nao pode ser vazio.", nameof(id));
+            User = user ?? throw new ArgumentNullException(nameof(user), "User nao pode ser vazio.");
+            Game = game ?? throw new ArgumentNullException(nameof(game), "Game nao pode ser vazio");
             if (purchasedDate == default)
                 throw new ArgumentException("PurchasedDate deve ser preenchida.", nameof(purchasedDate));
 

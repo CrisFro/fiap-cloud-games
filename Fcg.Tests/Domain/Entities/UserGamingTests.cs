@@ -107,7 +107,7 @@ namespace Fcg.Tests.UnitTests
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => new UserGaming(Guid.Empty, user, game, purchasedDate));
-            Assert.Contains("Id não pode ser vazio.", exception.Message);
+            Assert.Contains("Id nao pode ser vazio.", exception.Message);
         }
 
         [Fact]

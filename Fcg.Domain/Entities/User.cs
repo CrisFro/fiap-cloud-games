@@ -23,13 +23,13 @@ namespace Fcg.Domain.Entities
         public User(string name, string email, string role = "User")
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Nome não pode ser vazio ou nulo.", nameof(name));
+                throw new ArgumentException("Nome nao pode ser vazio ou nulo.", nameof(name));
             if (string.IsNullOrWhiteSpace(email))
-                throw new ArgumentException("Email não pode ser vazio ou nulo.", nameof(email));
+                throw new ArgumentException("Email nao pode ser vazio ou nulo.", nameof(email));
             if (!IsValidEmail(email)) 
-                throw new ArgumentException("Formato de email é inválido", nameof(email));
+                throw new ArgumentException("Formato de email e invalido", nameof(email));
             if (string.IsNullOrWhiteSpace(role))
-                throw new ArgumentException("Role não pode ser vazio ou nulo.", nameof(role));
+                throw new ArgumentException("Role nao pode ser vazio ou nulo.", nameof(role));
 
             Id = Guid.NewGuid();
             Name = name;
@@ -44,15 +44,15 @@ namespace Fcg.Domain.Entities
         public User(Guid id, string name, string email, string passwordHash, IEnumerable<UserGaming> gameLibrary, string role)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException("Id não pode ser vazio ou nulo.", nameof(id));
+                throw new ArgumentException("Id nao pode ser vazio ou nulo.", nameof(id));
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Nome não pode ser vazio ou nulo.", nameof(name));
+                throw new ArgumentException("Nome nao pode ser vazio ou nulo.", nameof(name));
             if (string.IsNullOrWhiteSpace(email))
-                throw new ArgumentException("Email não pode ser vazio ou nulo.", nameof(email));
+                throw new ArgumentException("Email nao pode ser vazio ou nulo.", nameof(email));
             if (string.IsNullOrWhiteSpace(passwordHash))
-                throw new ArgumentException("Password hash não pode ser vazio ou nulo.", nameof(passwordHash));
+                throw new ArgumentException("Password hash nao pode ser vazio ou nulo.", nameof(passwordHash));
             if (string.IsNullOrWhiteSpace(role))
-                throw new ArgumentException("Role não pode ser vazio ou nulo.", nameof(role));
+                throw new ArgumentException("Role nao pode ser vazio ou nulo.", nameof(role));
 
             Id = id;
             Name = name;
@@ -67,11 +67,11 @@ namespace Fcg.Domain.Entities
         public void AddGameToLibrary(Game game)
         {
             if (game == null)
-                throw new ArgumentNullException(nameof(game), "Game não pode ser nulo.");
+                throw new ArgumentNullException(nameof(game), "Game nao pode ser nulo.");
 
             if (_library.Any(ug => ug.Game.Id == game.Id))
             {                
-                throw new InvalidOperationException($"O game com ID '{game.Id}' já está na biblioteca do usuário.");
+                throw new InvalidOperationException($"O game com ID '{game.Id}' ja esta na biblioteca do usuario.");
             }
 
             var userGamingEntry = new UserGaming(this, game); 
@@ -94,7 +94,7 @@ namespace Fcg.Domain.Entities
         public void SetPasswordHash(string passwordHash)
         {
             if (string.IsNullOrWhiteSpace(passwordHash))
-                throw new ArgumentException("Password hash não pode ser vazio ou nulo.", nameof(passwordHash));
+                throw new ArgumentException("Password hash nao pode ser vazio ou nulo.", nameof(passwordHash));
 
             PasswordHash = passwordHash;
         }
@@ -102,7 +102,7 @@ namespace Fcg.Domain.Entities
         public void SetRole(string role)
         {
             if (string.IsNullOrWhiteSpace(role))
-                throw new ArgumentException("Role não pode ser vazio ou nulo.", nameof(role));
+                throw new ArgumentException("Role nao pode ser vazio ou nulo.", nameof(role));
 
             Role = role;
         }
@@ -110,11 +110,11 @@ namespace Fcg.Domain.Entities
         public void UpdateProfile(string newName, string newEmail)
         {
             if (string.IsNullOrWhiteSpace(newName))
-                throw new ArgumentException("Nome não pode ser vazio ou nulo.", nameof(newName));
+                throw new ArgumentException("Nome nao pode ser vazio ou nulo.", nameof(newName));
             if (string.IsNullOrWhiteSpace(newEmail))
-                throw new ArgumentException("Email não pode ser vazio ou nulo.", nameof(newEmail));
+                throw new ArgumentException("Email nao pode ser vazio ou nulo.", nameof(newEmail));
             if (!IsValidEmail(newEmail))
-                throw new ArgumentException("Formato de email inválido", nameof(newEmail));
+                throw new ArgumentException("Formato de email invalido", nameof(newEmail));
 
             Name = newName;
             Email = newEmail;
