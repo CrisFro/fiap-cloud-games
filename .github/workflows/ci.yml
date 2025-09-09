@@ -20,5 +20,5 @@ jobs:
         run: dotnet restore Fcg.Api/Fcg.Api.csproj
       - name: Build
         run: dotnet build Fcg.Api/Fcg.Api.csproj --no-restore --configuration Release
-      # - name: Test
-      #   run: dotnet test Fcg.Tests/Fcg.Tests.csproj --no-build --verbosity normal
+      - name: Test
+        run: dotnet test Fcg.Tests/Fcg.Tests.csproj
