@@ -1,4 +1,4 @@
-name: .NET CI - TESTE
+name: .NET CI
 
 on:
   push:
