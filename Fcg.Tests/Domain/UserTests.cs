@@ -109,7 +109,7 @@ namespace Fcg.Tests.Domain
         public void SetRole_ShouldUpdateUserRole_WhenRoleIsValid()
         {
             // Arrange
-            var user = EntityFakers.UserFaker.Generate();
+            var user = new User("Test User", "test@example.com", "User");
             var originalRole = user.Role;
             var newRole = "Admin";
 
@@ -128,7 +128,7 @@ namespace Fcg.Tests.Domain
         public void SetRole_ShouldThrowArgumentException_WhenRoleIsInvalid(string invalidRole)
         {
             // Arrange
-            var user = EntityFakers.UserFaker.Generate();
+            var user = new User("Test User", "test@example.com", "User");
 
             // Act
             Action act = () => user.SetRole(invalidRole);

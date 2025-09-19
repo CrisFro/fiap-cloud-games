@@ -8,9 +8,9 @@ namespace Fcg.Application.Services
         private readonly PasswordHasher<object> _hasher = new();
 
         public string Hash(string senha) =>
-            _hasher.HashPassword(null, senha);
+            _hasher.HashPassword(new object(), senha);
 
         public bool Verify(string senha, string hash) =>
-            _hasher.VerifyHashedPassword(null, hash, senha) == PasswordVerificationResult.Success;
+            _hasher.VerifyHashedPassword(new object(), hash, senha) == PasswordVerificationResult.Success;
     }
 }
