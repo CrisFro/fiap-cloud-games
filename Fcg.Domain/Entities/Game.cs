@@ -12,13 +12,13 @@
         public Game(string title, string description, GenreEnum genre, decimal price)
         {            
             if (string.IsNullOrWhiteSpace(title))
-                throw new ArgumentException("Título não pode ser vazio ou nulo", nameof(title));
+                throw new ArgumentException("Titulo nao pode ser vazio ou nulo", nameof(title));
             if (string.IsNullOrWhiteSpace(description))
-                throw new ArgumentException("Descrição não pode ser vazio ou nulo.", nameof(description));
+                throw new ArgumentException("Descricao nao pode ser vazio ou nulo.", nameof(description));
             if (!Enum.IsDefined(typeof(GenreEnum), genre))
-                throw new ArgumentException("Gênero inválido.", nameof(genre));
+                throw new ArgumentException("Genero invalido.", nameof(genre));
             if (price < 0)
-                throw new ArgumentOutOfRangeException(nameof(price), "Preço não pode ser menor que 0.");
+                throw new ArgumentOutOfRangeException(nameof(price), "Preco nao pode ser menor que 0.");
 
             Id = Guid.NewGuid();
             Title = title;
@@ -31,13 +31,13 @@
         public Game(Guid id, string title, string description, GenreEnum genre, decimal price, DateTime createdAt)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException("Id não pode ser vazio", nameof(id));
+                throw new ArgumentException("Id nao pode ser vazio", nameof(id));
             if (string.IsNullOrWhiteSpace(title)) 
-                throw new ArgumentException("Título não pode ser vazio ou nulo.", nameof(title));
+                throw new ArgumentException("Titulo nao pode ser vazio ou nulo.", nameof(title));
             if (!Enum.IsDefined(typeof(GenreEnum), genre))
-                throw new ArgumentException("Gênero inválido.", nameof(genre));
+                throw new ArgumentException("Genero invalido.", nameof(genre));
             if (price < 0)
-                throw new ArgumentOutOfRangeException(nameof(price), "Preço não pode ser menor que 0.");
+                throw new ArgumentOutOfRangeException(nameof(price), "Preco nao pode ser menor que 0.");
             
 
             Id = id;
@@ -50,11 +50,11 @@
         public void UpdateDetails(string newTitle, string newDescription, GenreEnum newGenre)
         {
             if (string.IsNullOrWhiteSpace(newTitle))
-                throw new ArgumentException("Título não pode ser vazio ou nulo.", nameof(newTitle));
+                throw new ArgumentException("Titulo nao pode ser vazio ou nulo.", nameof(newTitle));
             if (string.IsNullOrWhiteSpace(newDescription))
-                throw new ArgumentException("Descrição não pode ser vazio ou nulo.", nameof(newDescription));
+                throw new ArgumentException("Descricao nao pode ser vazio ou nulo.", nameof(newDescription));
             if (!Enum.IsDefined(typeof(GenreEnum), newGenre))
-                throw new ArgumentException("Gênero inválido.", nameof(newGenre));
+                throw new ArgumentException("Genero invalido.", nameof(newGenre));
 
             Title = newTitle;
             Description = newDescription;
@@ -64,7 +64,7 @@
         public void ChangePrice(decimal newPrice)
         {
             if (newPrice < 0)
-                throw new ArgumentOutOfRangeException(nameof(newPrice), "Preço não pode ser negativo.");
+                throw new ArgumentOutOfRangeException(nameof(newPrice), "Preco nao pode ser negativo.");
 
             Price = newPrice;
         }

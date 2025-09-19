@@ -65,7 +65,7 @@ namespace Fcg.Tests.UnitTests
                 faker.Email,
                 faker.Role
             ));
-            Assert.Contains("Nome não pode ser vazio ou nulo.", exception.Message);
+            Assert.Contains("Nome nao pode ser vazio ou nulo.", exception.Message);
         }
 
         [Theory]
@@ -86,9 +86,9 @@ namespace Fcg.Tests.UnitTests
                 invalidEmail,
                 faker.Role
             ));
-            Assert.True(exception.Message.Contains("Email não pode ser vazio ou nulo.") ||
-                        exception.Message.Contains("Formato de email é inválido"),
-                        $"Mensagem de exceção esperada: 'Email não pode ser vazio ou nulo.' ou 'Formato de email é inválido'. Mensagem real: '{exception.Message}'");
+            Assert.True(exception.Message.Contains("Email nao pode ser vazio ou nulo.") ||
+                        exception.Message.Contains("Formato de email e invalido"),
+                        $"Mensagem de excecao esperada: 'Email nao pode ser vazio ou nulo.' ou 'Formato de email e invalido'. Mensagem real: '{exception.Message}'");
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace Fcg.Tests.UnitTests
 
             // Act & Assert
             var exception = Assert.Throws<InvalidOperationException>(() => user.AddGameToLibrary(game));
-            Assert.Contains($"O game com ID '{game.Id}' já está na biblioteca do usuário.", exception.Message);
+            Assert.Contains($"O game com ID '{game.Id}' ja esta na biblioteca do usuario.", exception.Message);
             Assert.Single(user.Library); 
         }
 
@@ -131,7 +131,7 @@ namespace Fcg.Tests.UnitTests
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(() => user.AddGameToLibrary(null));
-            Assert.Contains("Game não pode ser nulo.", exception.Message);
+            Assert.Contains("Game nao pode ser nulo.", exception.Message);
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace Fcg.Tests.UnitTests
             );
 
             var user = new User(
-                Guid.NewGuid(), // ID de usuário
+                Guid.NewGuid(), // ID de usuï¿½rio
                 "Test User",
                 "test@example.com",
                 "hashedpassword",
@@ -155,7 +155,7 @@ namespace Fcg.Tests.UnitTests
                 "User"
             );
 
-            // Verificações iniciais para garantir o Arrange correto
+            // Verificaï¿½ï¿½es iniciais para garantir o Arrange correto
             Assert.Contains(user.Library, ug => ug.Game.Id == game.Id);
             Assert.Empty(user.GamesAdded); // Deve estar vazio ao carregar do DB
             Assert.Empty(user.GamesRemoved); // Deve estar vazio ao carregar do DB
@@ -168,8 +168,8 @@ namespace Fcg.Tests.UnitTests
             Assert.Empty(user.Library);
             Assert.Single(user.GamesRemoved);
             Assert.Equal(game.Id, user.GamesRemoved.First().Game.Id);
-            Assert.Equal(initialUserGaming.Id, user.GamesRemoved.First().Id); // Verifica que é a mesma instância de UserGaming removida
-            Assert.Empty(user.GamesAdded); // Certifique-se de que nada foi "adicionado" durante a remoção
+            Assert.Equal(initialUserGaming.Id, user.GamesRemoved.First().Id); // Verifica que ï¿½ a mesma instï¿½ncia de UserGaming removida
+            Assert.Empty(user.GamesAdded); // Certifique-se de que nada foi "adicionado" durante a remoï¿½ï¿½o
         }
 
 
@@ -213,7 +213,7 @@ namespace Fcg.Tests.UnitTests
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => user.SetPasswordHash(invalidHash));
-            Assert.Contains("Password hash não pode ser vazio ou nulo.", exception.Message);
+            Assert.Contains("Password hash nao pode ser vazio ou nulo.", exception.Message);
         }
 
         [Fact]
@@ -241,7 +241,7 @@ namespace Fcg.Tests.UnitTests
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => user.SetRole(invalidRole));
-            Assert.Contains("Role não pode ser vazio ou nulo.", exception.Message);
+            Assert.Contains("Role nao pode ser vazio ou nulo.", exception.Message);
         }
 
         [Fact]
@@ -275,9 +275,9 @@ namespace Fcg.Tests.UnitTests
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => user.UpdateProfile(newName, newEmail));
-            Assert.True(exception.Message.Contains("Nome não pode ser vazio ou nulo.") ||
-                        exception.Message.Contains("Email não pode ser vazio ou nulo.") ||
-                        exception.Message.Contains("Formato de email inválido"));
+            Assert.True(exception.Message.Contains("Nome nao pode ser vazio ou nulo.") ||
+                        exception.Message.Contains("Email nao pode ser vazio ou nulo.") ||
+                        exception.Message.Contains("Formato de email invalido"));
         }
     }
 }
