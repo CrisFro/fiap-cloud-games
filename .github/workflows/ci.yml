@@ -19,6 +19,6 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore Fcg.Api/Fcg.Api.csproj
       - name: Build
-        run: dotnet build Fcg.Api/Fcg.Api.csproj --no-restore --configuration Release
+        run: dotnet build Fcg.Api/Fcg.Api.csproj
       - name: Test
         run: dotnet test Fcg.Tests/Fcg.Tests.csproj
