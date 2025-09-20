@@ -1,7 +1,5 @@
 using Fcg.Domain.Entities;
 using FluentAssertions;
-using System;
-using Xunit;
 
 namespace Fcg.Tests.Domain
 {

@@ -1,10 +1,6 @@
-using Fcg.Api;
 using Fcg.Application.Requests;
-using Fcg.Tests;
-using Microsoft.AspNetCore.Mvc.Testing;
 using FluentAssertions;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
 using TechTalk.SpecFlow;
 

@@ -1,5 +1,4 @@
 using Fcg.Domain.Entities;
-using Fcg.Domain.Repositories;
 using Fcg.Infrastructure.Data;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;

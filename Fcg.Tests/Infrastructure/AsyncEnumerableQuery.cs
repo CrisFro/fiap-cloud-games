@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using System.Linq.Expressions;
 
-namespace Fcg.Infrastructure.Tests.Mocks
+namespace Fcg.Tests.Infrastructure
 {
     // Classe para simular IAsyncEnumerable
     public class AsyncEnumerableQuery<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
@@ -80,7 +80,7 @@ namespace Fcg.Infrastructure.Tests.Mocks
             // Para simular FirstOrDefaultAsync, ToListAsync etc.
             if (expression.ToString().Contains(".FirstOrDefaultAsync("))
             {
-                return (TResult)(object)Task.FromResult(enumerationResult.MoveNext() ? enumerationResult.Current : default(TEntity));
+                return (TResult)(object)Task.FromResult(enumerationResult.MoveNext() ? enumerationResult.Current : default);
             }
             else if (expression.ToString().Contains(".ToListAsync("))
             {
