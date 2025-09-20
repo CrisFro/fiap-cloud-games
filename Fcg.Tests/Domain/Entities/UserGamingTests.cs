@@ -11,14 +11,22 @@ namespace Fcg.Tests.UnitTests
     {
         private readonly Faker<User> _userFaker;
         private readonly Faker<Game> _gameFaker;
-        private readonly Faker<UserGaming> _userGamingFaker;
 
         public UserGamingTests()
         {
-            _userGamingFaker = new Faker<UserGaming>()
-                .CustomInstantiator(f => new UserGaming(
-                    _userFaker.Generate(),
-                    _gameFaker.Generate()
+            _userFaker = new Faker<User>()
+                .CustomInstantiator(f => new User(
+                    f.Person.FullName,
+                    f.Internet.Email(),
+                    f.PickRandom("User", "Admin")
+                ));
+
+            _gameFaker = new Faker<Game>()
+                .CustomInstantiator(f => new Game(
+                    f.Commerce.ProductName(),
+                    f.Lorem.Sentence(),
+                    f.PickRandom<GenreEnum>(),
+                    f.Finance.Amount(10, 1000)
                 ));
         }
 
