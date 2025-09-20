@@ -15,21 +15,6 @@ namespace Fcg.Tests.UnitTests
 
         public UserGamingTests()
         {
-            _userFaker = new Faker<User>()
-                .CustomInstantiator(f => new User(
-                    f.Person.FullName,
-                    f.Internet.Email(),
-                    f.PickRandom("User", "Admin")
-                ));
-
-            _gameFaker = new Faker<Game>()
-                .CustomInstantiator(f => new Game(
-                    f.Commerce.ProductName(),
-                    f.Lorem.Sentence(),
-                    f.PickRandom<GenreEnum>(),
-                    f.Finance.Amount(10, 1000)
-                ));
-
             _userGamingFaker = new Faker<UserGaming>()
                 .CustomInstantiator(f => new UserGaming(
                     _userFaker.Generate(),
@@ -107,7 +92,7 @@ namespace Fcg.Tests.UnitTests
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => new UserGaming(Guid.Empty, user, game, purchasedDate));
-            Assert.Contains("Id n„o pode ser vazio.", exception.Message);
+            Assert.Contains("Id n√£o pode ser vazio. (Parameter 'id')", exception.Message);
         }
 
         [Fact]
