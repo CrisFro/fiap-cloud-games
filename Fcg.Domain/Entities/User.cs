@@ -114,7 +114,7 @@ namespace Fcg.Domain.Entities
             if (string.IsNullOrWhiteSpace(newEmail))
                 throw new ArgumentException("Email não pode ser vazio ou nulo.", nameof(newEmail));
             if (!IsValidEmail(newEmail))
-                throw new ArgumentException("Formato de email inválido", nameof(newEmail));
+                throw new ArgumentException("Formato de email é inválido (Parameter 'newEmail')", nameof(newEmail));
 
             Name = newName;
             Email = newEmail;
