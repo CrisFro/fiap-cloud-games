@@ -29,7 +29,7 @@ namespace Fcg.Infrastructure.Queries
             return users;
         }
 
-        public async Task<UserResponse> GetByIdUserAsync(Guid userId)
+        public async Task<UserResponse?> GetByIdUserAsync(Guid userId)
         {
             var user = await (from u in _context.Users
                               where u.Id == userId
