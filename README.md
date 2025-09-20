@@ -1,46 +1,68 @@
 # 🎮 FIAP Cloud Games - Tech Challenge Fase 1
 
-Este projeto é a entrega da Fase 1 do Tech Challenge da FIAP. A proposta é desenvolver uma API REST em .NET 8 para cadastro de usuários e biblioteca de jogos adquiridos, com foco em boas práticas, qualidade de software e estrutura para expansão futura.
-
-## 📌 Funcionalidades Implementadas
-
-- ✅ Cadastro de usuários com validação de e-mail e senha forte
-- ✅ Autenticação via JWT com controle de acesso por **roles** (Usuário / Administrador)
-- ✅ Cadastro e listagem de jogos
-- ✅ Associação de jogos à biblioteca do usuário
-- ✅ Cadastro de promoções
-- ✅ Middleware de tratamento de erros e logs estruturados
-- ✅ Documentação da API com Swagger
-- ✅ Testes unitários com xUnit e aplicação de TDD/BDD
+API REST em .NET 8 para cadastro de usuários e gerenciamento de biblioteca de jogos, com autenticação JWT e controle de acesso por roles.
 
 ---
 
-## 🧠 Tecnologias Utilizadas
+## 🚀 Começando
 
-- .NET 8
-- Entity Framework Core
-- SQL Server
-- Swagger
-- JWT (JSON Web Token)
-- xUnit + Moq
-- BDDfy (para testes comportamentais)
-- FluentValidation
-- Clean Architecture + DDD
+### Pré-requisitos
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- SQL Server (local ou via Docker)
+- Visual Studio 2022 / VS Code ou outro IDE compatível
+
+### Configuração
+
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/seu-usuario/fiap-cloud-games.git
+cd fiap-cloud-games
+```
+
+2. Configure a string de conexão em `appsettings.Development.json`:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost;Database=FiapCloudGamesDb;Trusted_Connection=True;"
+}
+```
+
+3. Crie o banco de dados e aplique as migrations:
+
+```bash
+dotnet ef database update --project src/FiapCloudGames.Infrastructure
+```
+
+4. Rode a API:
+
+```bash
+dotnet run --project src/FiapCloudGames.API
+```
+
+A API estará disponível em `https://localhost:5001`.
 
 ---
 
-## 🔐 Perfis de Acesso
+## 🧪 Testes
 
-- **Usuário Comum**: pode se autenticar e visualizar sua biblioteca de jogos.
-- **Administrador**: pode criar jogos, promoções e gerenciar usuários.
+- Testes unitários com xUnit e Moq
+- Testes comportamentais com BDDfy
+
+Executar todos os testes:
+
+```bash
+dotnet test
+```
 
 ---
 
-## 🧪 Testes e Qualidade
+## 🔑 Autenticação
 
-- TDD aplicado ao módulo de autenticação (`AuthService`)
-- BDD aplicado ao fluxo de cadastro de usuário com `BDDfy`
-- Testes unitários com xUnit e mocks com Moq
+- JWT baseado em roles: `User` e `Admin`
+- Usuário Admin: pode criar jogos, promoções e gerenciar usuários
+- Usuário Comum: pode visualizar apenas sua biblioteca
 
 ---
 
@@ -48,8 +70,17 @@ Este projeto é a entrega da Fase 1 do Tech Challenge da FIAP. A proposta é des
 
 ```plaintext
 src/
-├── FiapCloudGames.API            # Camada de apresentação (API Controllers, Middleware)
-├── FiapCloudGames.Application   # DTOs, Services, Interfaces
-├── FiapCloudGames.Domain        # Entidades, Enums, Interfaces de domínio
-├── FiapCloudGames.Infrastructure# Repositórios, contexto EF Core, JWT service
-├── FiapCloudGames.Tests         # Testes unitários (TDD/BDD)
+├── FiapCloudGames.API           # Controllers, Middleware, Swagger
+├── FiapCloudGames.Application   # Services, DTOs, Interfaces
+├── FiapCloudGames.Domain        # Entidades, Enums, Regras de negócio
+├── FiapCloudGames.Infrastructure# Repositórios, DbContext, JWT Service
+├── FiapCloudGames.Tests         # Testes unitários e BDD
+```
+
+---
+
+## 📖 Documentação
+
+Após iniciar a API, a documentação Swagger estará disponível em:
+
+https://localhost:5001/swagger

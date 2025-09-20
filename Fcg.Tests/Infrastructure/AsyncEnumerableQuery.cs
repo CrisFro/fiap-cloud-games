@@ -2,11 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Fcg.Infrastructure.Tests.Mocks
 {
@@ -68,7 +64,7 @@ namespace Fcg.Infrastructure.Tests.Mocks
 
         public object Execute(Expression expression)
         {
-            return _inner.Execute(expression);
+            return _inner.Execute(expression)!;
         }
 
         public TResult Execute<TResult>(Expression expression)
@@ -88,7 +84,7 @@ namespace Fcg.Infrastructure.Tests.Mocks
             }
             else if (expression.ToString().Contains(".ToListAsync("))
             {
-                var listResult = ((IEnumerable<TEntity>)_inner.Execute(expression)).ToList();
+                var listResult = ((IEnumerable<TEntity>)_inner.Execute(expression)!).ToList();
                 return (TResult)(object)Task.FromResult(listResult);
             }
             // Adicione mais simulações conforme necessário para outros métodos assíncronos

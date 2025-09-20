@@ -1,16 +1,14 @@
 ﻿using Bogus;
 using Fcg.Domain.Entities;
-using System;
-using System.Collections.Generic;
 
-namespace Fcg.Infrastructure.Tests.Fakers
+namespace Fcg.Tests.Infrastructure
 {
     public static class EntityFakers
     {
-        private static readonly object _lock = new object();
-        private static Faker<User> _userFaker;
-        private static Faker<Game> _gameFaker;
-        private static Faker<Promotion> _promotionFaker;
+        private static readonly object _lock = new();
+        private static Faker<User>? _userFaker;
+        private static Faker<Game>? _gameFaker;
+        private static Faker<Promotion>? _promotionFaker;
 
         public static Faker<User> UserFaker
         {

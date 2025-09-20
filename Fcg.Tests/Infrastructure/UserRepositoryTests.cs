@@ -1,7 +1,6 @@
-﻿﻿using Fcg.Domain.Entities;
+﻿using Fcg.Domain.Entities;
 using Fcg.Infrastructure.Data;
 using Fcg.Infrastructure.Repositories;
-using Fcg.Infrastructure.Tests.Fakers;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System;

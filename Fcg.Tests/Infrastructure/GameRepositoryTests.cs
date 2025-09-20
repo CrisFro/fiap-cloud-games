@@ -1,10 +1,7 @@
 ﻿using Fcg.Domain.Entities;
 using Fcg.Infrastructure.Repositories;
-using Fcg.Infrastructure.Tests.Fakers;
+using Fcg.Tests.Infrastructure;
 using FluentAssertions;
-using System;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Fcg.Infrastructure.Tests
 {
@@ -28,25 +25,5 @@ namespace Fcg.Infrastructure.Tests
             // Assert
             act.Should().Throw<ArgumentOutOfRangeException>();
         }
-
-
-
-
-
-        //[Fact]
-        //public async Task UpdateAsync_ShouldFailSilently_WhenGameDoesNotExist()
-        //{
-        //    // Arrange
-        //    var nonExistentGame = EntityFakers.GameFaker.Generate();
-
-        //    // Act
-        //    // Supondo que exista um método UpdateAsync no repositório.
-        //    Func<Task> act = async () => await _gameRepository.UpdateAsync(nonExistentGame);
-
-        //    // Assert
-        //    // A operação não deve lançar uma exceção, pois é uma operação idempotente.
-        //    // O EF Core, por padrão, não lança exceção se a entidade a ser atualizada não for rastreada.
-        //    await act.Should().NotThrowAsync();
-        //}
     }
 }

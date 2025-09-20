@@ -2,11 +2,8 @@ using Fcg.Domain.Entities;
 using Fcg.Domain.Repositories;
 using Fcg.Infrastructure.Data;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -16,14 +13,12 @@ namespace Fcg.Tests.StepDefinitions
     public class PromotionRepositorySteps : IClassFixture<CustomWebApplicationFactory>, IDisposable
     {
         private readonly IServiceScope _scope;
-        private readonly IPromotionRepository _promotionRepository;
         private readonly FcgDbContext _dbContext;
         private readonly ScenarioContext _scenarioContext;
 
         public PromotionRepositorySteps(CustomWebApplicationFactory factory, ScenarioContext scenarioContext)
         {
             _scope = factory.Services.CreateScope();
-            _promotionRepository = _scope.ServiceProvider.GetRequiredService<IPromotionRepository>();
             _dbContext = _scope.ServiceProvider.GetRequiredService<FcgDbContext>();
             _scenarioContext = scenarioContext;
         }
@@ -122,7 +117,7 @@ namespace Fcg.Tests.StepDefinitions
         [When(@"I retrieve all promotions")]
         public async Task WhenIRetrieveAllPromotions()
         {
-            var promotions = _dbContext.Promotions.ToList();
+            var promotions = await _dbContext.Promotions.ToListAsync();
             _scenarioContext.Set(promotions, "AllPromotions");
         }
 

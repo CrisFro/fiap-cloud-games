@@ -53,9 +53,10 @@ namespace Fcg.Tests.UnitTests
         {
             // Arrange
             var game = _gameFaker.Generate();
+            User? user = null!;
 
             // Act & Assert
-            var exception = Assert.Throws<ArgumentNullException>(() => new UserGaming(null, game));
+            var exception = Assert.Throws<ArgumentNullException>(() => new UserGaming(user, game));
             Assert.Contains("User cannot be null.", exception.Message);
         }
 
@@ -64,9 +65,10 @@ namespace Fcg.Tests.UnitTests
         {
             // Arrange
             var user = _userFaker.Generate();
+            Game? game = null!;
 
             // Act & Assert
-            var exception = Assert.Throws<ArgumentNullException>(() => new UserGaming(user, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => new UserGaming(user, game));
             Assert.Contains("Game cannot be null.", exception.Message);
         }
 

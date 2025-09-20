@@ -1,14 +1,14 @@
-using System.Net;
-using System.Net.Http.Headers;
-using FluentAssertions;
 using Fcg.Domain.Entities;
 using Fcg.Domain.Repositories;
 using Fcg.Domain.Services;
 using Fcg.Infrastructure.Data;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using TechTalk.SpecFlow;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
+using System.Net;
+using System.Net.Http.Headers;
+using TechTalk.SpecFlow;
 
 namespace Fcg.Tests.StepDefinitions
 {
@@ -25,7 +25,7 @@ namespace Fcg.Tests.StepDefinitions
         private readonly FcgDbContext _dbContext;
 
         // Estado para o cenário
-        private HttpResponseMessage _response;
+        private HttpResponseMessage? _response;
         private Guid _promotionId;
 
         public PromotionSteps(WebApplicationFactory<Program> factory)
@@ -96,7 +96,7 @@ namespace Fcg.Tests.StepDefinitions
         [Then(@"o status da resposta deve ser (.*)")]
         public void ThenOStatusDaRespostaDeveSer(int statusCode)
         {
-            _response.StatusCode.Should().Be((HttpStatusCode)statusCode);
+            _response!.StatusCode.Should().Be((HttpStatusCode)statusCode);
         }
 
         [Then(@"a promoção não deve mais existir no banco de dados")]

@@ -1,11 +1,8 @@
 using Fcg.Application.Services;
 using Fcg.Domain.Repositories;
-using Fcg.Infrastructure.Repositories; // Mantém para a instanciação
-using Fcg.Infrastructure.Tests.Fakers;
+using Fcg.Infrastructure.Repositories;
+using Fcg.Tests.Infrastructure;
 using FluentAssertions;
-using System;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Fcg.Infrastructure.Tests.Application
 {
@@ -23,10 +20,10 @@ namespace Fcg.Infrastructure.Tests.Application
             _purchaseGameService = new PurchaseGameService(_userRepository, _gameRepository);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _context.Database.EnsureDeleted();
-            _context.Dispose();
+            base.Dispose();
         }
 
         [Fact]

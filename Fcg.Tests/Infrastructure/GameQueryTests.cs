@@ -1,7 +1,6 @@
 ﻿using Fcg.Infrastructure.Data;
 using Fcg.Infrastructure.Queries;
 using Fcg.Infrastructure.Tables;
-using Fcg.Infrastructure.Tests.Fakers;
 using FluentAssertions;
 using Xunit;
 using System;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Fcg.Domain.Entities;
 using Game = Fcg.Infrastructure.Tables.Game;
+using Fcg.Tests.Infrastructure;
 
 namespace Fcg.Infrastructure.Tests.Queries
 {

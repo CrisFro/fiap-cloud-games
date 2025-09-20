@@ -1,6 +1,6 @@
 ﻿using Fcg.Domain.Entities;
 using Fcg.Infrastructure.Repositories;
-using Fcg.Infrastructure.Tests.Fakers;
+using Fcg.Tests.Infrastructure;
 using FluentAssertions;
 using System;
 using System.Linq;

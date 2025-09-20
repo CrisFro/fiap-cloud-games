@@ -1,8 +1,7 @@
 ﻿using Fcg.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
 
-namespace Fcg.Infrastructure.Tests
+namespace Fcg.Tests.Infrastructure
 {
     public class BaseRepositoryTests : IDisposable
     {
@@ -20,10 +19,6 @@ namespace Fcg.Infrastructure.Tests
             _context.Database.EnsureCreated(); // Garante que o banco de dados em memória seja criado
         }
 
-        public void Dispose()
-        {
-            _context.Database.EnsureDeleted(); // Limpa o banco de dados após cada teste
-            _context.Dispose();
-        }
+        public virtual void Dispose() => _context.Dispose();
     }
 }

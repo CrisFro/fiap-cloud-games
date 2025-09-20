@@ -1,6 +1,6 @@
 using Bogus;
 using Fcg.Domain.Entities;
-using Fcg.Infrastructure.Tests.Fakers;
+using Fcg.Tests.Infrastructure;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -128,9 +128,10 @@ namespace Fcg.Tests.UnitTests
         {
             // Arrange
             var user = _userFaker.Generate();
+            Game? game = null!;
 
             // Act & Assert
-            var exception = Assert.Throws<ArgumentNullException>(() => user.AddGameToLibrary(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => user.AddGameToLibrary(game));
             Assert.Contains("Game não pode ser nulo. (Parameter 'game')", exception.Message);
         }
 

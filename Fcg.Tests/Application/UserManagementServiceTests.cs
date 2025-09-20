@@ -1,7 +1,7 @@
 using Fcg.Application.Services;
 using Fcg.Domain.Repositories;
 using Fcg.Infrastructure.Repositories; // Mantém para a instanciação
-using Fcg.Infrastructure.Tests.Fakers;
+using Fcg.Tests.Infrastructure;
 using FluentAssertions;
 using System;
 using System.Threading.Tasks;
