@@ -53,7 +53,7 @@ namespace Fcg.Tests.UnitTests
                 faker.Genre,
                 faker.Price
             ));
-            Assert.True(exception.Message.Contains("TÌtulo n„o pode ser vazio ou nulo")==true);
+            Assert.True(exception.Message.Contains("T√≠tulo n√£o pode ser vazio ou nulo")==true);
         }
 
         [Theory]
@@ -72,7 +72,7 @@ namespace Fcg.Tests.UnitTests
                 faker.Genre,
                 faker.Price
             ));
-            Assert.Contains("DescriÁ„o n„o pode ser vazio ou nulo", exception.Message);
+            Assert.Contains("Descri√ß√£o n√£o pode ser vazio ou nulo", exception.Message);
         }
 
         [Theory]
@@ -90,7 +90,7 @@ namespace Fcg.Tests.UnitTests
                 invalidGenre,
                 faker.Price
             ));
-            Assert.True(exception.Message.Contains("GÍnero inv·lido.")==true);
+            Assert.True(exception.Message.Contains("G√™nero inv√°lido.")==true);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Fcg.Tests.UnitTests
                 faker.Genre,
                 -10m
             ));
-            Assert.True(exception.Message.Contains("PreÁo n„o pode ser menor que 0.") ==true);
+            Assert.True(exception.Message.Contains("Pre√ßo n√£o pode ser menor que 0. (Parameter 'price')") ==true);
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace Fcg.Tests.UnitTests
             invalidTitle = string.Empty; 
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => game.UpdateDetails(invalidTitle, newDescription, newGenre));
-            Assert.Contains("TÌtulo n„o pode ser vazio ou nulo", exception.Message);
+            Assert.Contains("T√≠tulo n√£o pode ser vazio ou nulo", exception.Message);
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace Fcg.Tests.UnitTests
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => game.ChangePrice(-5.0m));
-            Assert.Contains("PreÁo n„o pode ser negativo.", exception.Message);
+            Assert.Contains("Pre√ßo n√£o pode ser negativo. (Parameter 'newPrice')", exception.Message);
         }
     }
 }
